@@ -25,8 +25,8 @@ db.createCollection( "Users", {
                 description: "must be a string and is required"
             },
             balance: {
-                bsonType : "string",
-                description: "must be a string and is required"
+                bsonType : "int",
+                description: "balance in groszy"
             },
             email: {
                 bsonType : "string",
@@ -39,7 +39,7 @@ db.createCollection( "Users", {
                 bsonType: "object",
                 properties: {
                     visitStart: {
-                        bsonType: "date",
+                        bsonType: "string",
                         description: "must be a date and is required"
                     },
                     costPerMin: {
@@ -55,13 +55,8 @@ db.createCollection( "Users", {
             cards: {
                 bsonType: "array",
                 items: {
-                    bsonType: "object",
-                    properties: {
-                        cardRFID: {
-                            bsonType: "string",
-                            description: "must be a string and is required"
-                        }
-                    }
+                    bsonType: "string",
+                    description: "must be a string and is required"
                 }
             },
         }
@@ -77,8 +72,8 @@ db.createCollection( "VisitTypes", {
                 description: "must be a string and is required"
             },
             costPerMin: {
-                bsonType: "string",
-                description: "must be a string and is required"
+                bsonType: "int",
+                description: "cost in groszy"
             },
             RFIDScanner: {
                 bsonType: "string",
@@ -93,20 +88,20 @@ db.createCollection( "VisitArchive", {
         bsonType: "object",
         properties: {
             visitStart: {
-                bsonType: "date",
+                bsonType: "string",
                 description: "must be a date and is required"
             },
             visitEnd:{
-                bsonType: "date",
+                bsonType: "string",
                 description: "must be a date and is required"
             },
             costPerMin: {
-                bsonType: "string",
-                description: "must be a string"
+                bsonType: "int",
+                description: "cost in groszy"
             },
             totalCost: {
-                bsonType: "string",
-                description: "must be a string"
+                bsonType: "int",
+                description: "cost in groszy"
             },
             visitType: {
                 bsonType: "int",
