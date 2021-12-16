@@ -47,7 +47,7 @@ class MongoQueries:
         return self.iotDB[USERS].find_one({"email": email}) is not None
 
     def register_user(self, user):
-        return self.iotDB[USERS].insert_one(user).insertedId
+        return self.iotDB[USERS].insert_one(user).inserted_id
 
     def set_user_status(self, user_id, status):
         return self.iotDB[USERS].find_one_and_update({"_id": ObjectId(user_id)}, {"$set": {"status": status}}) is not None
@@ -76,8 +76,17 @@ class MongoQueries:
             return None
         return convertObjectIdsToStr(result["_id"])
 
+    def create_visit_type(self, visit_type):
+        return self.iotDB[VISIT_TYPES].insert_one(visit_type).inserted_id
+
     def get_visit_type_id_by_name(self, visit_type_name):
         result = self.iotDB[VISIT_TYPES].find_one({"visitType": visit_type_name})
+        if result is None:
+            return None
+        return convertObjectIdsToStr(result["_id"])
+
+    def get_visit_type_id_by_rfidScanner(self, rfidScanner):
+        result = self.iotDB[VISIT_TYPES].find_one({"RFIDScanner": rfidScanner})
         if result is None:
             return None
         return convertObjectIdsToStr(result["_id"])
