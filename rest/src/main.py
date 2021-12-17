@@ -1,5 +1,5 @@
 from utils.config import Environment
-from database.mongo_queries import test_query
+from pymongo import MongoClient
 from app.app import App
 
 env = Environment()
@@ -18,3 +18,5 @@ APP = App(
     env.mongo_pass,
     env.mongo_max_connections
 )
+
+import initialize_modules

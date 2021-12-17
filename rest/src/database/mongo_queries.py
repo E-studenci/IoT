@@ -3,5 +3,5 @@ from main import APP
 
 
 @APP.mongo_query
-def test_query(client: MongoClient):
-    print(client.list_database_names())
+def list_database_names(client: MongoClient):
+    return client.list_database_names()

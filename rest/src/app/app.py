@@ -1,5 +1,4 @@
 from redis import BlockingConnectionPool
-from app.query_holder import QueryHolder
 from pymongo import MongoClient
 from flask import Flask
 import typing as t
@@ -50,7 +49,6 @@ class App(Flask):
             maxPoolSize=mongo_max_connections,
             maxIdleTimeMS=6000
         )
-        self.mongo_queries = QueryHolder()
         
         self.redis = BlockingConnectionPool(
                 host=redis_host,
@@ -60,24 +58,23 @@ class App(Flask):
                 password=redis_pass,
                 max_connections=redis_max_connections
         )
-        self.redis_queries = QueryHolder()
         
     def __del__(self):
         self.mongo.close()
         self.redis.disconnect()
     
     def mongo_query(self, func):
-        def wrapper():
+        def wrapper(*args , **kwargs):
             with self.mongo.start_session() as session:
                 with session.start_transaction():
-                    func(session.client)
-        self.mongo_queries._add_query(func.__name__, wrapper)
+                    result = func(session.client, *args , **kwargs)
+                    return result
         return wrapper
     
     def redis_query(self, func):
-        def wrapper():
+        def wrapper(*args , **kwargs):
             connection = self.redis.get_connection()
-            func(connection)
+            result = func(connection, *args, **kwargs)
             self.redis.release(connection)
-        self.redis_queries._add_query(func.__name__, wrapper)
+            return result
         return wrapper
