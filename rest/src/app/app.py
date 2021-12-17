@@ -1,4 +1,5 @@
-from redis import Redis, ConnectionPool
+from redis import BlockingConnectionPool
+from app.query_holder import QueryHolder
 from pymongo import MongoClient
 from flask import Flask
 import typing as t
@@ -8,15 +9,17 @@ class App(Flask):
     def __init__(
             self, 
             import_name: str, 
-            redis_host: str = '127.0.0.1', 
-            redis_port: int = 6379, 
-            redis_db: int = 0,
-            redis_user: str = 'root', 
-            redis_pass: str = 'admin',
-            mongo_host: str = '127.0.0.1', 
-            mongo_port: int = 27017,
-            mongo_user: str = 'root', 
-            mongo_pass: str = 'admin', 
+            redis_host: str, 
+            redis_port: int, 
+            redis_db: int,
+            redis_user: str, 
+            redis_pass: str,
+            redis_max_connections: int,
+            mongo_host: str, 
+            mongo_port: int,
+            mongo_user: str, 
+            mongo_pass: str, 
+            mongo_max_connections: int,
             static_url_path: t.Optional[str] = None, 
             static_folder: t.Optional[t.Union[str, os.PathLike]] = "static", 
             static_host: t.Optional[str] = None, 
@@ -44,14 +47,37 @@ class App(Flask):
             port=mongo_port,
             username=mongo_user,
             password=mongo_pass,
-            maxIdleTimeMS=30000
+            maxPoolSize=mongo_max_connections,
+            maxIdleTimeMS=6000
         )
-        self.redis = Redis(
-            connection_pool=ConnectionPool(
+        self.mongo_queries = QueryHolder()
+        
+        self.redis = BlockingConnectionPool(
                 host=redis_host,
                 port=redis_port,
                 db=redis_db,
                 username=redis_user,
-                password=redis_pass
-            )
+                password=redis_pass,
+                max_connections=redis_max_connections
         )
+        self.redis_queries = QueryHolder()
+        
+    def __del__(self):
+        self.mongo.close()
+        self.redis.disconnect()
+    
+    def mongo_query(self, func):
+        def wrapper():
+            with self.mongo.start_session() as session:
+                with session.start_transaction():
+                    func(session.client)
+        self.mongo_queries._add_query(func.__name__, wrapper)
+        return wrapper
+    
+    def redis_query(self, func):
+        def wrapper():
+            connection = self.redis.get_connection()
+            func(connection)
+            self.redis.release(connection)
+        self.redis_queries._add_query(func.__name__, wrapper)
+        return wrapper
