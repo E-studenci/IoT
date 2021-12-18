@@ -15,3 +15,4 @@ class Environment(metaclass=Singleton):
         self.redis_user = getenv("REDIS_USER", "root")
         self.redis_pass = getenv("REDIS_PASS", "admin")
         self.redis_max_connections = int(getenv("REDIS_MAX_CONNECTIONS", "20"))
+        self.flask_secret_key = getenv("SECRET_KEY", "SECRET_KEY")

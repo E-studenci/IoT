@@ -1,22 +1,28 @@
+from flask_httpauth import HTTPBasicAuth
 from utils.config import Environment
-from pymongo import MongoClient
+from flask_login import LoginManager
 from app.app import App
 
-env = Environment()
+ENV = Environment()
 
 APP = App(
     "Iot", 
-    env.redis_host, 
-    env.redis_port, 
-    env.redis_db, 
-    env.redis_user,
-    env.redis_pass,
-    env.redis_max_connections,
-    env.mongo_host, 
-    env.mongo_port,
-    env.mongo_user,
-    env.mongo_pass,
-    env.mongo_max_connections
+    ENV.redis_host, 
+    ENV.redis_port, 
+    ENV.redis_db, 
+    ENV.redis_user,
+    ENV.redis_pass,
+    ENV.redis_max_connections,
+    ENV.mongo_host, 
+    ENV.mongo_port,
+    ENV.mongo_user,
+    ENV.mongo_pass,
+    ENV.mongo_max_connections
 )
+APP.config["SECRET_KEY"] = ENV.flask_secret_key
+
+LOGIN_MANAGER = LoginManager()
+LOGIN_MANAGER.init_app(APP)
+BASIC_AUTH = HTTPBasicAuth()
 
 import initialize_modules
