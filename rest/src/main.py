@@ -26,3 +26,5 @@ LOGIN_MANAGER.init_app(APP)
 BASIC_AUTH = HTTPBasicAuth()
 
 import initialize_modules
+
+APP.start_event_loop()

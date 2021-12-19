@@ -4,5 +4,6 @@ from main import APP
 
 
 @APP.redis_query
-def template(client: Redis):
-    return True
+def subscribe(client: Redis, channel: str):
+    pubsub = client.pubsub()
+    pubsub.subscribe(channel)

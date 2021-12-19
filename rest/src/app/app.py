@@ -1,11 +1,25 @@
 from utils.errors import MongoConnectionError, RedisConnectionError
-from redis import BlockingConnectionPool
+from redis import BlockingConnectionPool, Redis
 from pymongo.errors import PyMongoError
+from threading import Thread, Event
+from asyncio import get_event_loop
 from pymongo import MongoClient
 from redis import RedisError
 from flask import Flask
 import typing as t
+import asyncio
 import os
+
+async def firstWorker():
+    while True:
+        await asyncio.sleep(1)
+        print("First Worker Executed")
+
+async def secondWorker():
+    while True:
+        await asyncio.sleep(1)
+        print("Second Worker Executed")
+
 
 class App(Flask):
     def __init__(
@@ -64,6 +78,19 @@ class App(Flask):
                 max_connections=redis_max_connections
         )
         
+        self.event_loop = get_event_loop()
+    
+    def start_event_loop(self):
+        def start_event_loop_inner(loop):
+            async def exit(loop, stop_event: Event):
+                stop_event.wait()
+                loop.close()
+            asyncio.ensure_future(exit())
+            loop.run_forever()
+
+        thread = Thread(target=start_event_loop_inner, args=self.event_loop, daemon=True)
+        thread.start()
+    
     def __del__(self):
         self.mongo.close()
         self.redis.disconnect()
@@ -83,9 +110,9 @@ class App(Flask):
     def redis_query(self, func):
         def wrapper(*args , **kwargs):
             try:
-                connection = self.redis.get_connection()
+                connection = Redis(connection_pool=self.redis)
                 result = func(connection, *args, **kwargs)
-                self.redis.release(connection)
+                connection.close()
                 return result
             except RedisError as redis_error:
                 self.logger.error(redis_error)
