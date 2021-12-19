@@ -1,7 +1,7 @@
 from utils.errors import MongoConnectionError, RedisConnectionError
 from redis import BlockingConnectionPool, Redis
 from pymongo.errors import PyMongoError
-from threading import Thread, Event
+from app.event_loop import EventLoop
 from asyncio import get_event_loop
 from pymongo import MongoClient
 from redis import RedisError
@@ -78,22 +78,13 @@ class App(Flask):
                 max_connections=redis_max_connections
         )
         
-        self.event_loop = get_event_loop()
+        self.event_loop = EventLoop(self.logger)
     
     def start_event_loop(self):
-        def start_event_loop_inner(loop):
-            async def exit(loop, stop_event: Event):
-                stop_event.wait()
-                loop.close()
-            asyncio.ensure_future(exit())
-            loop.run_forever()
-
-        thread = Thread(target=start_event_loop_inner, args=self.event_loop, daemon=True)
-        thread.start()
+        self.event_loop.start_loop()
     
-    def __del__(self):
-        self.mongo.close()
-        self.redis.disconnect()
+    def stop_event_loop(self):
+        self.event_loop.stop_loop()
     
     def mongo_query(self, func):
         def wrapper(*args , **kwargs):
@@ -118,3 +109,8 @@ class App(Flask):
                 self.logger.error(redis_error)
                 raise RedisConnectionError()
         return wrapper
+    
+    def __del__(self):
+        self.mongo.close()
+        self.redis.disconnect()
+        self.event_loop.stop_loop()
