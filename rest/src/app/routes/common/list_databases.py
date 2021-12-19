@@ -12,5 +12,5 @@ def list_databases():
     
     return ResponseData(
         data = {'database_names': data},
-        status = 200
+        code = 200
     )
