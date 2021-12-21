@@ -1,57 +1,49 @@
-from asyncio import create_task, sleep, run
-from threading import Thread
-import asyncio
-
-
-class Event:
-    def __init__(self) -> None:
-        self.stop = False
-
-    def set(self):
-        self.stop = True
-
-    def is_set(self):
-        return self.stop
-
-    def clear(self):
-        self.stop = False
-
+from redis import Redis
 
 class EventLoop:
-    def __init__(self, logger) -> None:
+    def __init__(self, redis: Redis, logger) -> None:
+        self.redis = redis
         self.logger = logger
-        self.stop_event = Event()
-
-    def start_loop(self) -> None:
-        def start_loop_inner(self):
-            run(self.exit_layer())
-
-        thread = Thread(
-            target=start_loop_inner,
-            args=(self, ),
+        self.thread = None
+    
+    def start_event_loop(self):  
+        rfids = self.parsed_array(self.get_all_channels())
+        pubsub = self.redis.pubsub(ignore_subscribe_messages=True)
+        pubsub.subscribe(**rfids)
+        
+        self.thread = pubsub.run_in_thread(
+            sleep_time=0.001, 
+            exception_handler=self.exception_handler, 
             daemon=True
         )
-        thread.start()
+    
+    def parsed_array(self, array: list) -> dict:
+        result = {}
+        for item in array:
+            result[item] = self.message_handler
+        return result
 
-    def stop_loop(self) -> None:        
-        self.stop_event.set()
+    def get_all_channels(self):
+        raise NotImplementedError()
+    
+    def stop_event_loop(self):
+        try:
+            self.thread.stop()
+            self.thread.join(timeout=1.0)
+        except Exception as e:
+            print(e)
+        
+    def is_running(self):
+        return self.thread._running.is_set()
 
-    async def exit_layer(self) -> None:
-        stop_task = create_task(self.exit())
-        create_task(self.main())
-        await stop_task
-
-    async def exit(self) -> None:
-        while True:
-            await asyncio.sleep(1)
-            if self.stop_event.is_set():
-                return
-
-    async def main(self) -> None:
-        worker = create_task(self.worker())
-        await worker
-
-    async def worker(self) -> None: # Example
-        while True:
-            self.logger.info("Working")
-            await sleep(2)
+    @staticmethod
+    def message_handler(message):
+        raise NotImplementedError()
+    
+    @staticmethod
+    def exception_handler(ex, pubsub, thread):
+        try:
+            thread.stop()
+            thread.join(timeout=1.0)
+        except Exception:
+            pass

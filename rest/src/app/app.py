@@ -2,7 +2,6 @@ from utils.errors import MongoConnectionError, RedisConnectionError
 from redis import BlockingConnectionPool, Redis
 from pymongo.errors import PyMongoError
 from app.event_loop import EventLoop
-from asyncio import get_event_loop
 from pymongo import MongoClient
 from redis import RedisError
 from flask import Flask
@@ -45,7 +44,7 @@ class App(Flask):
             instance_path: t.Optional[str] = None, 
             instance_relative_config: bool = False,
             root_path: t.Optional[str] = None
-        ):
+        ) -> None:
         super().__init__(
             import_name, 
             static_url_path=static_url_path, 
@@ -69,25 +68,24 @@ class App(Flask):
             maxIdleTimeMS=6000
         )
         
-        self.redis = BlockingConnectionPool(
+        self.redis = Redis(
+            connection_pool=BlockingConnectionPool(
                 host=redis_host,
                 port=redis_port,
                 db=redis_db,
                 username=redis_user,
                 password=redis_pass,
                 max_connections=redis_max_connections
+            )
         )
         
-        self.event_loop = EventLoop(self.logger)
+        self.redis_loop = EventLoop(self.redis)
+        
+    def start_redis_loop(self) -> None:
+        self.redis_loop.start_event_loop()
     
-    def start_event_loop(self):
-        self.event_loop.start_loop()
-    
-    def stop_event_loop(self):
-        self.event_loop.stop_loop()
-    
-    def mongo_query(self, func):
-        def wrapper(*args , **kwargs):
+    def mongo_query(self, func) -> t.Callable:
+        def wrapper(*args , **kwargs) -> t.Any:
             try:
                 with self.mongo.start_session() as session:
                     with session.start_transaction():
@@ -98,19 +96,7 @@ class App(Flask):
                 raise MongoConnectionError()
         return wrapper
     
-    def redis_query(self, func):
-        def wrapper(*args , **kwargs):
-            try:
-                connection = Redis(connection_pool=self.redis)
-                result = func(connection, *args, **kwargs)
-                connection.close()
-                return result
-            except RedisError as redis_error:
-                self.logger.error(redis_error)
-                raise RedisConnectionError()
-        return wrapper
-    
-    def __del__(self):
+    def __del__(self) -> None:
         self.mongo.close()
+        self.redis_loop.stop_loop()
         self.redis.disconnect()
-        self.event_loop.stop_loop()
