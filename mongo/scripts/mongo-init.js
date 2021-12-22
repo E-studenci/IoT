@@ -35,18 +35,18 @@ db.createCollection( "Users", {
             status:{
                 enum: ["ACTIVE","DISABLED"],
             },
-            currentVisit: {
+            current_visit: {
                 bsonType: "object",
                 properties: {
-                    visitStart: {
+                    visit_start: {
                         bsonType: "string",
                         description: "must be a date and is required"
                     },
-                    costPerMin: {
+                    cost_per_min: {
                         bsonType: "string",
                         description: "must be a string"
                     },
-                    visitType: {
+                    visit_type: {
                         bsonType: "int",
                         description: "must be an int"
                     }
@@ -67,15 +67,15 @@ db.createCollection( "VisitTypes", {
     validator: { $jsonSchema: {
         bsonType: "object",
         properties: {
-            visitType: {
+            visit_type: {
                 bsonType: "string",
                 description: "must be a string and is required"
             },
-            costPerMin: {
+            cost_per_min: {
                 bsonType: "int",
                 description: "cost in groszy"
             },
-            RFIDScanner: {
+            rfid_scanner: {
                 bsonType: "string",
                 description: "the id of the rfid scanner at the gate"
             },
@@ -87,23 +87,23 @@ db.createCollection( "VisitArchive", {
     validator: { $jsonSchema: {
         bsonType: "object",
         properties: {
-            visitStart: {
+            visit_start: {
                 bsonType: "string",
                 description: "must be a date and is required"
             },
-            visitEnd:{
+            visit_end:{
                 bsonType: "string",
                 description: "must be a date and is required"
             },
-            costPerMin: {
+            cost_per_min: {
                 bsonType: "int",
                 description: "cost in groszy"
             },
-            totalCost: {
+            total_cost: {
                 bsonType: "int",
                 description: "cost in groszy"
             },
-            visitType: {
+            visit_type: {
                 bsonType: "int",
                 description: "must be an int"
             },
