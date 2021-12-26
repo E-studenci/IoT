@@ -1,9 +1,14 @@
 from config import Environment
 from datetime import datetime
 from redis import Redis
+import logging
 import asyncio
 import random
 import json
+
+logging.basicConfig(level=logging.INFO)
+
+SLEEP_TIME = 20
 
 ENV = Environment()
 
@@ -23,11 +28,6 @@ REDIS = Redis(
     password = ENV.redis_pass
 )
 
-async def main():
-    while True:
-        await asyncio.wait(20)
-        await publish(random.choice(CLIENTS))
-
 
 async def publish(client: str):
     data = {
@@ -35,8 +35,15 @@ async def publish(client: str):
         "client": client
     }
     
+    logging.info(json.dumps(data))
     REDIS.publish(ENV.rfid, json.dumps(data))
-    
+
+
+async def main():
+    while True:
+        await asyncio.sleep(SLEEP_TIME)
+        await publish(random.choice(CLIENTS))
+
 
 if __name__ == '__main__':
-    asyncio.run(main)
+    asyncio.run(main())
