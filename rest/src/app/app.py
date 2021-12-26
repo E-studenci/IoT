@@ -9,17 +9,6 @@ import typing as t
 import asyncio
 import os
 
-async def firstWorker():
-    while True:
-        await asyncio.sleep(1)
-        print("First Worker Executed")
-
-async def secondWorker():
-    while True:
-        await asyncio.sleep(1)
-        print("Second Worker Executed")
-
-
 class App(Flask):
     def __init__(
             self, 

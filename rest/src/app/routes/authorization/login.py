@@ -1,6 +1,4 @@
 from app.response_parser import ResponseData, response_wrapper
-from flask import request, abort, redirect, url_for
-from urllib.parse import urlparse, urljoin
 from flask_login import login_user
 from main import APP, BASIC_AUTH
 
