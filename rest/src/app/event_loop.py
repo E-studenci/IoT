@@ -24,7 +24,9 @@ class EventLoop:
         return result
 
     def get_all_channels(self):
-        raise NotImplementedError()
+        from database.mongo.read import get_all_visit_types
+        visit_types = get_all_visit_types()
+        return [visit_type.rfid_scanner for visit_type in visit_types] 
     
     def stop_event_loop(self):
         try:
@@ -38,7 +40,7 @@ class EventLoop:
 
     @staticmethod
     def message_handler(message):
-        raise NotImplementedError()
+        print(message)
     
     @staticmethod
     def exception_handler(ex, pubsub, thread):

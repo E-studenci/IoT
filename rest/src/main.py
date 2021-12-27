@@ -27,7 +27,7 @@ BASIC_AUTH = HTTPBasicAuth()
 
 import initialize_modules
 
-# APP.start_redis_loop()
+APP.start_redis_loop()
 
 if __name__ == '__main__':
     # If you use 'use_reloader=True' option, the event loop for redis subscriber will spawn twice
