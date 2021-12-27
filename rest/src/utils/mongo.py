@@ -1,5 +1,3 @@
-
-
 from bson.objectid import ObjectId
 
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S"

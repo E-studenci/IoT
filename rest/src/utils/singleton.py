@@ -1,5 +1,6 @@
 from typing import Any
 
+
 class Singleton(type):
     _instances = {}
     def __call__(cls, *args: Any, **kwds: Any) -> Any:
