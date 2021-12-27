@@ -1,9 +1,8 @@
-from datetime import datetime
 from pymongo import MongoClient
+from datetime import datetime
 from database.models import *
-from main import APP
-from rest.src.app.app import App
 from utils.mongo import * 
+from main import APP
 
 
 @APP.mongo_query

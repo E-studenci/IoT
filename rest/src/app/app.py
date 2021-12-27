@@ -68,7 +68,7 @@ class App(Flask):
             )
         )
         
-        self.redis_loop = EventLoop(self.redis)
+        self.redis_loop = EventLoop(self.redis, self.logger)
         
     def start_redis_loop(self) -> None:
         self.redis_loop.start_event_loop()

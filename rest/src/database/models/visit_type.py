@@ -1,5 +1,5 @@
 
-from rest.src.utils.mongo import convertObjectIdsToStr
+from utils.mongo import convertObjectIdsToStr
 from dataclasses import dataclass, field
 
 @dataclass

@@ -1,5 +1,5 @@
 
-from rest.src.utils.mongo import convertObjectIdsToStr
+from utils.mongo import convertObjectIdsToStr
 
 class User(object):
     def __init__(self, _id=None, login=None, password=None, surname=None, name=None, email=None, status=None, balance=None) -> None:

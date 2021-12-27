@@ -1,6 +1,6 @@
+from rest.src.database.models import user
 from pymongo import MongoClient
 from database.models import *
-from rest.src.database.models import user
 from utils.mongo import *
 from main import APP
 
