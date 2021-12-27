@@ -1,16 +1,17 @@
 
-from utils.mongo import convertObjectIdsToStr
+from dataclasses import dataclass, field
+from database.models.model import Model
 
-class User(object):
-    def __init__(self, _id=None, login=None, password=None, surname=None, name=None, email=None, status=None, balance=None) -> None:
-        self._id = _id
-        self.login = login
-        self.password = password
-        self.surname = surname
-        self.name = name
-        self.email = email
-        self.status = status
-        self.balance = balance
+@dataclass
+class User(Model):
+    _id: str = field(init=True, default=None)
+    login: str = field(init=True, default=None)
+    password: int = field(init=True, default=None)
+    surname: str = field(init=True, default=None)
+    name: str = field(init=True, default=None)
+    email: str = field(init=True, default=None)
+    status: str = field(init=True, default=None)
+    balance: str = field(init=True, default=None)
 
     @property
     def is_active(self):
@@ -35,10 +36,3 @@ class User(object):
     def __ne__(self, other):
         equal = self.__eq__(other)
         return not equal
-
-    def from_dict(source: dict): 
-        source = convertObjectIdsToStr(source)
-        ret = User()
-        for k, v in source.items():
-            setattr(ret, k, v)
-        return ret
