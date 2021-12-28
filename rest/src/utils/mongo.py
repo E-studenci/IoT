@@ -1,6 +1,7 @@
 from bson.objectid import ObjectId
 
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
+ADMINS = "Admins"
 USERS = "Users"
 VISIT_TYPES = "VisitTypes"
 VISIT_ARCHIVE = "VisitArchive"
