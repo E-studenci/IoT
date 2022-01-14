@@ -1,29 +1,20 @@
+from re import T
 from utils.errors import MongoConnectionError, RedisConnectionError
 from redis import BlockingConnectionPool, Redis
 from pymongo.errors import PyMongoError
 from app.event_loop import EventLoop
 from pymongo import MongoClient
+from utils.config import Environment
 from redis import RedisError
 from flask import Flask
 import typing as t
-import asyncio
 import os
 
 class App(Flask):
     def __init__(
             self, 
             import_name: str, 
-            redis_host: str, 
-            redis_port: int, 
-            redis_db: int,
-            redis_user: str, 
-            redis_pass: str,
-            redis_max_connections: int,
-            mongo_host: str, 
-            mongo_port: int,
-            mongo_user: str, 
-            mongo_pass: str, 
-            mongo_max_connections: int,
+            env: Environment, 
             static_url_path: t.Optional[str] = None, 
             static_folder: t.Optional[t.Union[str, os.PathLike]] = "static", 
             static_host: t.Optional[str] = None, 
@@ -46,26 +37,26 @@ class App(Flask):
             instance_relative_config=instance_relative_config,
             root_path=root_path
         )
+        self.env = env
+        
         self.mongo = MongoClient(
-            host=mongo_host,
-            port=mongo_port,
-            username=mongo_user,
-            password=mongo_pass,
-            maxPoolSize=mongo_max_connections,
+            host=env.mongo_host,
+            port=env.mongo_port,
+            username=env.mongo_user,
+            password=env.mongo_pass,
+            maxPoolSize=env.mongo_max_connections,
             connectTimeoutMS=5000,
             serverSelectionTimeoutMS=5000,
             maxIdleTimeMS=6000
         )
         
         self.redis = Redis(
-            connection_pool=BlockingConnectionPool(
-                host=redis_host,
-                port=redis_port,
-                db=redis_db,
-                username=redis_user,
-                password=redis_pass,
-                max_connections=redis_max_connections
-            )
+            host=env.redis_host,
+            port=env.redis_port,
+            db=env.redis_db,
+            max_connections=env.redis_max_connections,
+            ssl=True,
+            ssl_ca_certs=env.redis_crt
         )
         
         self.redis_loop = EventLoop(self.redis, self.logger)
