@@ -1,4 +1,5 @@
-from flask import Response
+from utils.errors import MongoConnectionError
+from flask import Response, abort
 import json
 
 RESPONSE_CODES = [
@@ -37,7 +38,10 @@ class ResponseData:
 
 def response_wrapper(func):
     def wrapper(*args, **kwargs):
-        response: ResponseData = func(*args, **kwargs)
+        try:
+            response: ResponseData = func(*args, **kwargs)
+        except MongoConnectionError:
+            abort(500)
         return Response(
             response=json.dumps({'data': response.data, 'error': response.error, 'status': parse_code(response.code)}),
             status=response.code,

@@ -9,7 +9,7 @@ from main import APP
 def assign_card(client: MongoClient, user_id: str, card_rfid: str) -> bool:
     result = client.iot[USERS].find_one_and_update(
         {"_id": ObjectId(user_id)},
-        {"$push": {"cards": card_rfid}})
+        {"$set": {"card": card_rfid}})
     return result is not None
 
 
@@ -22,17 +22,17 @@ def change_user_balance(client: MongoClient, user_id: str, amount: int) -> bool:
 
 
 @APP.mongo_query
-def end_visit(client: MongoClient, user_id: str) -> int:
+def end_visit(client: MongoClient, user_id: str, visit_end:datetime) -> int:
     user = client.iot[USERS].find_one_and_update(
         {"_id": ObjectId(user_id)},
         {"$unset": {"currentVisit": ""}})
     if user is None or "currentVisit" not in user:
         return None
     curr_visit = user["currentVisit"]
-    visit_end = datetime.now()
     total_cost = (visit_end - datetime.strptime(curr_visit["visitStart"], DATE_FORMAT)).total_seconds()/60 * int(curr_visit["costPerMin"])
 
     result = client.iot[VISIT_ARCHIVE].insert_one({
+        "_id": curr_visit["_id"]
         "visitStart": curr_visit["visitStart"],
         "visitEnd": visit_end.strftime(DATE_FORMAT),
         "costPerMin": curr_visit["costPerMin"],

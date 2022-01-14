@@ -21,6 +21,7 @@ def start_visit(client:MongoClient, visit_type_id:str, user_id:str) -> str:
     result = client.iot[USERS].find_one_and_update(
         {"_id": ObjectId(user_id)},
         {"$set": {"currentVisit": {
+                "_id": ObjectId(),
                 "visitStart": datetime.now().strftime(DATE_FORMAT),
                 "costPerMin": visit_type["costPerMin"],
                 "visitType":  ObjectId(visit_type_id)}}})

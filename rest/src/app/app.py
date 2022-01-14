@@ -1,10 +1,9 @@
-from re import T
 from utils.errors import MongoConnectionError, RedisConnectionError
 from redis import BlockingConnectionPool, Redis
 from pymongo.errors import PyMongoError
 from app.event_loop import EventLoop
-from pymongo import MongoClient
 from utils.config import Environment
+from pymongo import MongoClient
 from redis import RedisError
 from flask import Flask
 import typing as t

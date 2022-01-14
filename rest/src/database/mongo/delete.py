@@ -11,5 +11,5 @@ def delete_user(client:MongoClient, user_id:str) -> bool:
 def unassign_card(client:MongoClient, user_id:str, card_rfid:str) -> bool:
     result = client.iot[USERS].find_one_and_update(
         {"_id": ObjectId(user_id)},
-        {"$pull": {"cards": card_rfid}})
+        {"$unset": {"card": ""}})
     return result is not None
