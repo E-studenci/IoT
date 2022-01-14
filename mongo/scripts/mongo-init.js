@@ -83,14 +83,10 @@ db.createCollection(
                             }
                         }
                     },
-                    cards:{
-                        bsonType:"array",
-                        items:{
-                            bsonType:"string",
-                            description:"must be a string and is required"
-                        }
+                    card:{
+                        bsonType:"string",
+                        description:"must be a string"
                     },
-                    
                 }
             }
         }
