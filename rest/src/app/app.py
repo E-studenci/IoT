@@ -77,5 +77,5 @@ class App(Flask):
     
     def __del__(self) -> None:
         self.mongo.close()
-        self.redis_loop.stop_loop()
+        self.redis_loop.stop_event_loop()
         self.redis.disconnect()

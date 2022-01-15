@@ -1,5 +1,8 @@
 from utils.singleton import Singleton
 from os import getenv
+import dotenv
+
+dotenv.load_dotenv()
 
 
 class Environment(metaclass=Singleton):
