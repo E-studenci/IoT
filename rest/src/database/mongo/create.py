@@ -24,5 +24,6 @@ def start_visit(client:MongoClient, visit_type_id:str, user_id:str) -> str:
                 "_id": ObjectId(),
                 "visitStart": datetime.now().strftime(DATE_FORMAT),
                 "costPerMin": visit_type["costPerMin"],
+                "user": ObjectId(user_id),
                 "visitType":  ObjectId(visit_type_id)}}})
     return result is None 
