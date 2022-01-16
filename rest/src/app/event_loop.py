@@ -1,4 +1,7 @@
 from redis import Redis
+import datetime
+import json
+
 
 class EventLoop:
     def __init__(self, redis: Redis, logger) -> None:
@@ -20,7 +23,7 @@ class EventLoop:
     def parsed_array(self, array: list) -> dict:
         result = {}
         for item in array:
-            result[item] = self.message_handler
+            result[f"{item}-gate"] = self.message_handler
         return result
 
     def get_all_channels(self):
@@ -38,9 +41,26 @@ class EventLoop:
     def is_running(self):
         return self.thread._running.is_set()
 
-    @staticmethod
-    def message_handler(message):
-        print(message)
+    def message_handler(self, message):
+        import database.mongo.read as read
+        import database.mongo.create as create
+        import database.mongo.update as update
+        channel: str = message['channel'].decode().removesuffix('-gate')
+        data = json.loads(message['data'].decode())
+        
+        user = read.get_card_user(data['client'])
+        visit_type = read.get_visit_type_id_by_rfid_scanner(channel)
+        if not user:
+            self.redis.publish(f"{channel}-server", 'false')
+            return
+        
+        if user.current_visit:
+            update.end_visit(user._id, datetime.datetime.now())
+        else:
+            create.start_visit(visit_type._id, user._id)
+        
+        self.redis.publish(f"{channel}-server", 'true')
+        
     
     @staticmethod
     def exception_handler(ex, pubsub, thread):

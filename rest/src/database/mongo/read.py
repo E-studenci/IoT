@@ -45,8 +45,8 @@ def get_visit_type_by_name(client: MongoClient, visit_type_name: str) -> VisitTy
 
 
 @APP.mongo_query
-def get_visit_type_id_by_rfidScanner(client: MongoClient, rfidScanner: str) -> VisitType:
-    result = client.iot[VISIT_TYPES].find_one({"rfid_scanner": ObjectId(rfidScanner)})
+def get_visit_type_id_by_rfid_scanner(client: MongoClient, rfid_scanner: str) -> VisitType:
+    result = client.iot[VISIT_TYPES].find_one({"rfid_scanner": rfid_scanner})
     return None if result is None else VisitType.from_dict(convertObjectIdsToStr(result))
 
 

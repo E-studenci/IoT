@@ -47,7 +47,7 @@ def end_visit(client: MongoClient, user_id: str, visit_end:datetime) -> int:
         "visit_type": curr_visit["visit_type"],
         "user": ObjectId(user_id)
     })
-    return total_cost
+    return result
 
 
 TEST=False
