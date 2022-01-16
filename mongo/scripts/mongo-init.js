@@ -4,7 +4,7 @@ db.createUser(
         pwd: 'mongo',
         roles: [
             {
-                role: 'readWrite',
+                role: 'root',
                 db: 'iot',
             },
         ],
