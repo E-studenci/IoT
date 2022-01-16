@@ -74,11 +74,11 @@ db.createCollection(
                                 description:"must be a date and is required"
                             },
                             cost_per_min:{
-                                bsonType:"string",
-                                description:"must be a string"
+                                bsonType:"int",
+                                description:"must be an int"
                             },
                             visit_type:{
-                                bsonType:"int",
+                                bsonType:"objectId",
                                 description:"must be an int"
                             }
                         }
@@ -143,11 +143,11 @@ db.createCollection(
                         description:"cost in groszy"
                     },
                     visit_type:{
-                        bsonType:"int",
+                        bsonType:"objectId",
                         description:"must be an int"
                     },
                     user:{
-                        bsonType:"int",
+                        bsonType:"objectId",
                         description:"must be an int"
                     }
                 }
