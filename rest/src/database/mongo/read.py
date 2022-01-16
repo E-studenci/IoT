@@ -58,8 +58,10 @@ def get_all_visit_types(client: MongoClient) -> List[VisitType]:
 @APP.mongo_query
 def get_ongoing_visits(client: MongoClient) -> List[User]:
     resultList = []
-    for user in client.iot[USERS].find({"current_visit": {"$exists": True}}):
-        resultList.append(Visit.from_dict(user["current_visit"]))
+    for user in client.iot[USERS].find({"current_visit": {"$exists": True}}): ## TODO: postprzatac ten syf
+        current_visit = user["current_visit"]
+        current_visit["user"] = user["_id"]
+        resultList.append(Visit.from_dict(current_visit))
     return resultList
 
 @APP.mongo_query
@@ -72,8 +74,12 @@ def get_user_visits(client: MongoClient, user_id: str) -> List[Visit]:
     user = client.iot[USERS].find_one({"_id": ObjectId(user_id)})
     if user is None:
         return None
-    if "current_visit" in user:
-        result_list.append(Visit.from_dict(convertObjectIdsToStr(user["current_visit"])))
     for visit in client.iot[VISIT_ARCHIVE].find({"user": ObjectId(user_id)}):
-        result_list.append(Visit.from_dict(convertObjectIdsToStr(visit)))
+        result_list.append(Visit.from_dict(visit))
     return result_list
+
+TEST=False
+if TEST:
+    client = MongoClient("mongodb://root:mongo@130.61.111.97:27017/?authSource=iot&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false")
+    x = get_ongoing_visits(client)
+    print(x)

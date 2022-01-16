@@ -1,9 +1,16 @@
 from datetime import datetime
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
 from database.models import *
 from utils.mongo import *
 from main import APP
 
+
+@APP.mongo_query
+def edit_user(client: MongoClient,id:str, changes:dict) -> str:
+    return convertObjectIdsToStr(client.iot[USERS].find_one_and_update(
+        {"_id": ObjectId(id)},
+        {"$set": changes}, 
+        return_document=ReturnDocument.AFTER))
 
 @APP.mongo_query
 def assign_card(client: MongoClient, user_id: str, card_rfid: str) -> bool:
@@ -25,20 +32,25 @@ def change_user_balance(client: MongoClient, user_id: str, amount: int) -> bool:
 def end_visit(client: MongoClient, user_id: str, visit_end:datetime) -> int:
     user = client.iot[USERS].find_one_and_update(
         {"_id": ObjectId(user_id)},
-        {"$unset": {"currentVisit": ""}})
-    if user is None or "currentVisit" not in user:
+        {"$unset": {"current_visit": ""}})
+    if user is None or "current_visit" not in user:
         return None
-    curr_visit = user["currentVisit"]
-    total_cost = (visit_end - datetime.strptime(curr_visit["visitStart"], DATE_FORMAT)).total_seconds()/60 * int(curr_visit["costPerMin"])
+    curr_visit = user["current_visit"]
+    total_cost = (visit_end - datetime.strptime(curr_visit["visit_start"], DATE_FORMAT)).total_seconds()/60 * int(curr_visit["cost_per_min"])
 
     result = client.iot[VISIT_ARCHIVE].insert_one({
-        "_id": curr_visit["_id"]
-        "visitStart": curr_visit["visitStart"],
-        "visitEnd": visit_end.strftime(DATE_FORMAT),
-        "costPerMin": curr_visit["costPerMin"],
+        "_id": curr_visit["_id"],
+        "visit_start": curr_visit["visit_start"],
+        "visit_end": visit_end.strftime(DATE_FORMAT),
+        "cost_per_min": curr_visit["cost_per_min"],
         "totalCost": total_cost,
-        "visitType": curr_visit["visitType"],
+        "visit_type": curr_visit["visit_type"],
         "user": ObjectId(user_id)
     })
     return total_cost
-    
+
+
+TEST=False
+if TEST:
+    client = MongoClient("mongodb://root:mongo@130.61.111.97:27017/?authSource=iot&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false")
+    end_visit(client,"61e4362b045097543aebb754", datetime.utcnow())

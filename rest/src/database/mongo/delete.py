@@ -13,3 +13,9 @@ def unassign_card(client:MongoClient, user_id:str, card_rfid:str) -> bool:
         {"_id": ObjectId(user_id)},
         {"$unset": {"card": ""}})
     return result is not None
+
+
+TEST=False
+if TEST:
+    client = MongoClient("mongodb://root:mongo@130.61.111.97:27017/?authSource=iot&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false")
+    

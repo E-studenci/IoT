@@ -1,12 +1,12 @@
-from app.response_parser import ResponseData, response_wrapper
+import json
+from app.response_parser import ResponseData, response_wrapper, ResponseError
 from flask_login import login_required
-from flask import request
-from main import APP
-
 import database.mongo.create as create
 import database.mongo.delete as delete
+import database.mongo.update as update
 import database.mongo.read as read
-
+from flask import request
+from main import APP
 USER_ROUTE = "/user"
 
 
@@ -18,7 +18,7 @@ def add_user():
     if read.get_user_by_email(json_data["email"]):
         return ResponseData(
             code = 400,
-            error = "email already used"
+            error = ResponseError(name="Invalid Data", description="email already used")
         )
     result = create.register_user(json_data)
     return ResponseData(
@@ -27,27 +27,37 @@ def add_user():
     )
 
 
-@APP.route(USER_ROUTE + "/get", methods=['GET'])
+@APP.route(USER_ROUTE + "/get/{id}", methods=['GET'])
 @login_required
 @response_wrapper()
-def get_user():
-    json_data = request.json
-    user = read.get_user_by_id(json_data["_id"])
+def get_user(id:str):
+    user = read.get_user_by_id(id)
     if user is None:
         return ResponseData(
             code = 400,
-            error = "user not found"
+            error = ResponseError(name="Invalid Data", description="user not found")
         )
     return ResponseData(
         code = 200,
         data = user.__dict__
     )
 
-# @APP.route(USER_ROUTE + "/edit", methods=['UPDATE'])
-# @login_required
-# @response_wrapper
-# def update_user():
-#     pass ## TODO check new against existing
+@APP.route(USER_ROUTE + "/edit", methods=['UPDATE'])
+@login_required
+@response_wrapper()
+def update_user():
+    json_data = request.json
+    changes = dict(json_data)
+    changes.pop("_id")
+    result = update.edit_user(json_data["_id"], changes)
+    if not result:
+        return ResponseData(
+            code = 400,
+            error = ResponseError(name="Invalid Data", description="user not found")
+        )
+    return ResponseData(
+        code = 200
+    )
 
 @APP.route(USER_ROUTE + "/delete", methods=['DELETE'])
 @login_required
@@ -58,7 +68,7 @@ def delete_user():
     if not result:
         return ResponseData(
             code = 400,
-            error = "user not found"
+            error = ResponseError(name="Invalid Data", description="user not found")
         )
     return ResponseData(
         code = 200
