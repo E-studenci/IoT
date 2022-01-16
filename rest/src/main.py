@@ -21,5 +21,5 @@ APP.start_redis_loop()
 
 if __name__ == '__main__':
     # If you use 'use_reloader=True' option, the event loop for redis subscriber will spawn twice
-    # resulting in doubled behaviour: Every time a publisher sends a new message, event loop will reacive it twice.
+    # resulting in doubled behavior: Every time a publisher sends a new message, event loop will reacive it twice.
     APP.run(port=5000, host='127.0.0.1', use_reloader=False, debug=True)

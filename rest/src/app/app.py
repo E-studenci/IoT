@@ -4,7 +4,7 @@ from pymongo.errors import PyMongoError
 from app.event_loop import EventLoop
 from utils.config import Environment
 from pymongo import MongoClient
-from redis import RedisError
+from functools import wraps
 from flask import Flask
 import typing as t
 import os
@@ -64,7 +64,8 @@ class App(Flask):
         self.redis_loop.start_event_loop()
     
     def mongo_query(self, func) -> t.Callable:
-        def wrapper(*args , **kwargs) -> t.Any:
+        @wraps(func)
+        def wrapper(*args, **kwargs) -> t.Any:
             try:
                 with self.mongo.start_session() as session:
                     with session.start_transaction():

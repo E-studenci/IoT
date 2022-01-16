@@ -1,5 +1,8 @@
+from utils.json_validation.json_methods import validate_json
 from utils.errors import MongoConnectionError
-from flask import Response, abort
+from flask import Response, abort, request
+from flask.wrappers import BadRequest
+from functools import wraps
 import json
 
 RESPONSE_CODES = [
@@ -35,17 +38,62 @@ class ResponseData:
         self.code = code
         self.error = error
 
-
-def response_wrapper(func):
+def data_wrapper(func):
+    @wraps(func)
     def wrapper(*args, **kwargs):
-        try:
-            response: ResponseData = func(*args, **kwargs)
-        except MongoConnectionError:
-            abort(500)
+        response: ResponseData = func(*args, **kwargs)
         return Response(
-            response=json.dumps({'data': response.data, 'error': response.error, 'status': parse_code(response.code)}),
+            response=json.dumps({
+                'data': response.data,
+                'error': response.error,
+                'status': parse_code(response.code)
+            }),
             status=response.code,
             mimetype='application/json'
         )
-    wrapper.__name__ = func.__name__
     return wrapper
+
+def response_wrapper(json_schema=None):
+    def called(func):
+        @data_wrapper
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                if json_schema:
+                    if not request.is_json:
+                        response_data = ResponseData(
+                            code = 400,
+                            error = ResponseError(
+                                description='Provide application/json or application/*+json content type.',
+                                name='Mimetype error'
+                            )
+                        )
+                        return response_data
+                    
+                    
+                    valid, error = validate_json(json_schema, request.json)
+                    if not valid:
+                        response_data = ResponseData(
+                            code = 400,
+                            error = ResponseError(
+                                description=error,
+                                name='Invalid JSON schema'
+                            )
+                        )
+                        return response_data
+                    
+                response_data: ResponseData = func(*args, **kwargs)
+            except MongoConnectionError:
+                abort(500)
+            except BadRequest as error:
+                response_data = ResponseData(
+                    code = error.code,
+                    error = ResponseError(
+                        description=error.description,
+                        name='Invalid JSON'
+                    )
+                )
+                return response_data
+            return response_data
+        return wrapper
+    return called

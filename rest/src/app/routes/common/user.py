@@ -1,5 +1,4 @@
 from app.response_parser import ResponseData, response_wrapper
-from utils.json_stuff.json_methods import validate_json
 from flask_login import login_required
 from flask import request
 from main import APP
@@ -13,22 +12,15 @@ USER_ROUTE = "/user"
 
 @APP.route(USER_ROUTE + "/add", methods=['POST'])
 @login_required
-@response_wrapper
+@response_wrapper()
 def add_user():
-    request_json = request.json
-    valid, error_message = validate_json(None, request_json)
-    if not valid:
-        return ResponseData(
-            code = 400,
-            error = error_message
-        )
-
-    if read.get_user_by_email(request_json["email"]):
+    json_data = request.json
+    if read.get_user_by_email(json_data["email"]):
         return ResponseData(
             code = 400,
             error = "email already used"
         )
-    result = create.register_user(request_json)
+    result = create.register_user(json_data)
     return ResponseData(
         code = 200,
         data = result
@@ -37,16 +29,10 @@ def add_user():
 
 @APP.route(USER_ROUTE + "/get", methods=['GET'])
 @login_required
-@response_wrapper
+@response_wrapper()
 def get_user():
-    request_json = request.json
-    valid, error_message = validate_json(None, request_json)
-    if not valid:
-        return ResponseData(
-            code = 400,
-            error = error_message
-        )
-    user = read.get_user_by_id(request_json["_id"])
+    json_data = request.json
+    user = read.get_user_by_id(json_data["_id"])
     if user is None:
         return ResponseData(
             code = 400,
@@ -65,16 +51,10 @@ def get_user():
 
 @APP.route(USER_ROUTE + "/delete", methods=['DELETE'])
 @login_required
-@response_wrapper
+@response_wrapper()
 def delete_user():
-    request_json = request.json
-    valid, error_message = validate_json(None, request_json)
-    if not valid:
-        return ResponseData(
-            code = 400,
-            error = error_message
-        )
-    result = delete.delete_user(request_json["_id"])
+    json_data = request.json
+    result = delete.delete_user(json_data["_id"])
     if not result:
         return ResponseData(
             code = 400,

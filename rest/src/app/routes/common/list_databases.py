@@ -6,7 +6,7 @@ from main import APP
 
 @APP.route("/list_databases")
 @login_required
-@response_wrapper
+@response_wrapper()
 def list_databases():
     data = list_database_names()
     

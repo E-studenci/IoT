@@ -5,7 +5,7 @@ from main import APP
 
 @APP.route("/logout")
 @login_required
-@response_wrapper
+@response_wrapper()
 def logout():
     logout_user()
     return ResponseData()
