@@ -54,8 +54,10 @@ class App(Flask):
             port=env.redis_port,
             db=env.redis_db,
             max_connections=env.redis_max_connections,
-            ssl=True,
-            ssl_ca_certs=env.redis_crt
+            ssl_keyfile  = os.path.join(env.key_folder, env.client_key),
+            ssl_certfile = os.path.join(env.key_folder, env.client_crt),
+            ssl_ca_certs = os.path.join(env.key_folder, env.redis_crt),
+            ssl=True
         )
         
         self.redis_loop = EventLoop(self.redis, self.logger)
