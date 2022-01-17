@@ -1,4 +1,3 @@
-import json
 from app.response_parser import ResponseData, response_wrapper, ResponseError
 from flask_login import login_required
 import database.mongo.create as create
