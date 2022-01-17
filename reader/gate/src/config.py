@@ -10,5 +10,4 @@ class Environment:
         self.redis_port = int(getenv("REDIS_PORT", "6379"))
         self.redis_db   = getenv("REDIS_DB", "0")
         self.redis_crt   = getenv("REDIS_CRT", "redis.crt")
-        self.redis_user = getenv("REDIS_USER", "default")
         self.redis_pass = getenv("REDIS_PASS", "admin")

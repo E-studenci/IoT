@@ -32,6 +32,7 @@ REDIS = Redis(
     port         = ENV.redis_port,
     db           = ENV.redis_db,
     ssl_ca_certs = ENV.redis_crt,
+    password     = ENV.redis_pass,
     ssl          = True
 )
 
