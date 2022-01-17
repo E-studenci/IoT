@@ -11,7 +11,7 @@ from main import APP
 USER_ROUTE = "/user"
 
 
-@APP.route(USER_ROUTE + "/add", methods=['POST'])
+@APP.route(USER_ROUTE + "/add", methods=['PUT'])
 @login_required
 @response_wrapper()
 def add_user():
@@ -28,10 +28,10 @@ def add_user():
     )
 
 
-@APP.route(USER_ROUTE + "/get/{id}", methods=['GET'])
+@APP.route(USER_ROUTE + "/get/<id>", methods=['GET'])
 @login_required
 @response_wrapper()
-def get_user(id:str):
+def get_user(id: str):
     user = read.get_user_by_id(id)
     if user is None:
         return ResponseData(
@@ -40,10 +40,20 @@ def get_user(id:str):
         )
     return ResponseData(
         code = 200,
-        data = user.__dict__
+        data = user
     )
 
-@APP.route(USER_ROUTE + "/edit", methods=['UPDATE'])
+@APP.route(USER_ROUTE + "/get", methods=['GET'])
+@login_required
+@response_wrapper()
+def get_users():
+    users = read.get_all_users()
+    return ResponseData(
+        code = 200,
+        data = users
+    )
+
+@APP.route(USER_ROUTE + "/edit", methods=['POST'])
 @login_required
 @response_wrapper()
 def update_user():
@@ -57,15 +67,15 @@ def update_user():
             error = ResponseError(name="Invalid Data", description="user not found")
         )
     return ResponseData(
-        code = 200
+        code = 200,
+        data=result
     )
 
-@APP.route(USER_ROUTE + "/delete", methods=['DELETE'])
+@APP.route(USER_ROUTE + "/delete/<id>", methods=['DELETE'])
 @login_required
 @response_wrapper()
-def delete_user():
-    json_data = request.json
-    result = delete.delete_user(json_data["_id"])
+def delete_user(id: str):
+    result = delete.delete_user(id)
     if not result:
         return ResponseData(
             code = 400,
@@ -74,3 +84,4 @@ def delete_user():
     return ResponseData(
         code = 200
     )
+    

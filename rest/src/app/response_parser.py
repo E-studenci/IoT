@@ -2,6 +2,7 @@ from utils.json_validation.json_methods import validate_json
 from utils.errors import MongoConnectionError
 from flask import Response, abort, request
 from flask.wrappers import BadRequest
+from bson.errors import InvalidId
 from functools import wraps
 import json
 
@@ -85,6 +86,14 @@ def response_wrapper(json_schema=None):
                 response_data: ResponseData = func(*args, **kwargs)
             except MongoConnectionError:
                 abort(500)
+            except InvalidId as error:
+                response_data = ResponseData(
+                    code = 400,
+                    error = ResponseError(
+                        description=error.__str__(),
+                        name='Invalid JSON'
+                    )
+                )
             except BadRequest as error:
                 response_data = ResponseData(
                     code = error.code,

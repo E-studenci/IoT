@@ -45,12 +45,24 @@ def end_visit(client: MongoClient, user_id: str, visit_end:datetime) -> int:
         "cost_per_min": curr_visit["cost_per_min"],
         "total_cost": total_cost,
         "visit_type": curr_visit["visit_type"],
-        "user": ObjectId(user_id)
+        "user": ObjectId(user_id),
+        "status": "PENDING"
     })
     return convertObjectIdsToStr(result.inserted_id)
 
+@APP.mongo_query
+def confirm_visit(client: MongoClient, visit_id:str) -> bool:
+    visit = client.iot[VISIT_ARCHIVE].find_one({"_id": ObjectId(visit_id)})
+    if "status" in visit and visit["status"] == "PENDING":
+        result = client.iot[VISIT_ARCHIVE].find_one_and_update(
+            {"_id": ObjectId(visit_id)},
+            {"$set": {"status": "CONFIRMED"}},
+            return_document=ReturnDocument.AFTER)
+        return True
+    return False
 
 TEST=False
 if TEST:
     client = MongoClient("mongodb://root:mongo@130.61.111.97:27017/?authSource=iot&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false")
     end_visit(client,"61e4362b045097543aebb758", datetime.utcnow())
+    

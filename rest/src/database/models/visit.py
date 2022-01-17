@@ -12,6 +12,7 @@ class Visit(CurrentVisit):
     user: User = field(init=True, default=None)
     total_cost: int = field(init=True, default=None)
     visit_end: str = field(init=True, default=None)
+    status: str = field(init=True, default=None)
 
     @classmethod
     def from_dict(cls, source: dict): 
@@ -21,3 +22,4 @@ class Visit(CurrentVisit):
         user = User.from_dict(source["user"])
         ret_visit.user = user
         return ret_visit
+        

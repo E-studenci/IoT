@@ -68,6 +68,23 @@ def get_all_visit_types(client: MongoClient) -> List[VisitType]:
     return [VisitType.from_dict(result) for result in results]
 
 @APP.mongo_query
+def get_all_users(client: MongoClient) -> List[User]:
+    resultList = []
+    visit_types = get_all_visit_types()
+    for user in client.iot[USERS].find():
+        try:
+            # get visit type    
+            visit_type = next(x for x in visit_types if ObjectId(x._id) == user["current_visit"]["visit_type"])
+            # add visit type to current visit
+            user["current_visit"]["visit_type"] = visit_type.__dict__
+        except:
+            pass
+        # append user to list
+        resultList.append(User.from_dict(user))
+    return resultList
+
+
+@APP.mongo_query
 def get_ongoing_visits(client: MongoClient) -> List[User]:
     resultList = []
     visit_types = get_all_visit_types()
@@ -75,7 +92,7 @@ def get_ongoing_visits(client: MongoClient) -> List[User]:
         # get visit type
         visit_type = next(x for x in visit_types if ObjectId(x._id) == user["current_visit"]["visit_type"])
         # add visit type to current visit
-        user["current_visit"]["visit_type"] = visit_type.__dict__
+        user["current_visit"]["visit_type"] = visit_type
         # append user to list
         resultList.append(User.from_dict(user))
     return resultList
@@ -94,6 +111,17 @@ def get_user_visits(client: MongoClient, user_id: str) -> List[Visit]:
         result_list.append(Visit.from_dict(visit))
     return result_list
 
+@APP.mongo_query
+def get_pending_visits(client: MongoClient) -> List[Visit]:
+    result_list = []
+    visit_types = get_all_visit_types()
+    for visit in client.iot[VISIT_ARCHIVE].find({"status": "PENDING"}):
+        visit_type = next(x for x in visit_types if ObjectId(x._id) == visit["visit_type"])
+        visit["visit_type"] = visit_type
+        visit["user"] = client.iot[USERS].find_one({"_id": visit["user"]})
+        result_list.append(Visit.from_dict(visit))
+    return result_list
+
 TEST=False
 if TEST:
     client = MongoClient("mongodb://root:mongo@130.61.111.97:27017/?authSource=iot&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false")
@@ -101,3 +129,4 @@ if TEST:
     print(x)
     x = get_card_user(client, "f91a61e515d1fc6a7fa9986473b6d0ff")
     print(x)
+    

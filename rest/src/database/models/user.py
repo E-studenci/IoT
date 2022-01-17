@@ -10,7 +10,7 @@ class User(Model):
     email: str = field(init=True, default=None)
     status: str = field(init=True, default=None)
     balance: int = field(init=True, default=None)
-    card: str = field(init=True, default=None) ## TODO: add visit to user
+    card: str = field(init=True, default=None)
     current_visit: CurrentVisit = field(init=True, default=None)
 
     @classmethod
