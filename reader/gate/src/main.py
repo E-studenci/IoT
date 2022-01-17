@@ -15,7 +15,6 @@ SLEEP_TIME = 10
 
 ENV = Environment()
 
-
 CLIENTS = [
     "f91a61e515d1fc6a7fa9986473b6d0ff",
     "4ab47e54c2f73ad4c0eb3974709721cd",
@@ -27,14 +26,20 @@ CLIENTS = [
     "fbdab93478256eda11a7e173935e621c"
 ]
 
+import os.path
+
+os.path.join('/reader/gate/tls', 'client_1.crt')
+
 REDIS = Redis(
     host         = ENV.redis_host, 
     port         = ENV.redis_port,
     db           = ENV.redis_db,
-    ssl_ca_certs = ENV.redis_crt,
-    password     = ENV.redis_pass,
+    ssl_keyfile  = os.path.join(ENV.key_folder, ENV.client_key),
+    ssl_certfile = os.path.join(ENV.key_folder, ENV.client_crt),
+    ssl_ca_certs = os.path.join(ENV.key_folder, ENV.redis_crt),
     ssl          = True
 )
+
 
 EVENT_LOOP = EventLoop(REDIS, ENV)
 EVENT_LOOP.start_event_loop()
