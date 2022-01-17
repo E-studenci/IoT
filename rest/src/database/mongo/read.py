@@ -13,55 +13,71 @@ def list_database_names(client: MongoClient):
 @APP.mongo_query
 def get_admin_by_id(client: MongoClient, admin_id: str) -> User:
     result = client.iot[ADMINS].find_one({"_id": ObjectId(admin_id)})
-    return None if result is None else Admin.from_dict(convertObjectIdsToStr(result))
+    return None if result is None else Admin.from_dict(result)
 
 
 @APP.mongo_query
 def get_admin_by_login(client: MongoClient, login: str) -> User:
     result = client.iot[ADMINS].find_one({"login": login})
-    return None if result is None else Admin.from_dict(convertObjectIdsToStr(result))
+    return None if result is None else Admin.from_dict(result)
 
 
 @APP.mongo_query
 def get_user_by_email(client: MongoClient, email: str) -> User:
     result = client.iot[USERS].find_one({"email": email})
-    return None if result is None else User.from_dict(convertObjectIdsToStr(result))
+    if result is None:
+        return None
+    if "current_visit" in result:
+        visit_type = client.iot[VISIT_TYPES].find_one({"_id": result["current_visit"]["visit_type"]})
+        result["current_visit"]["visit_type"] = visit_type
+    return User.from_dict(result)
 
 @APP.mongo_query
 def get_user_by_id(client: MongoClient, id: str) -> User:
     result = client.iot[USERS].find_one({"_id": ObjectId(id)})
-    return None if result is None else User.from_dict(convertObjectIdsToStr(result))
+    if "current_visit" in result:
+        visit_type = client.iot[VISIT_TYPES].find_one({"_id": result["current_visit"]["visit_type"]})
+        result["current_visit"]["visit_type"] = visit_type
+    return User.from_dict(result)
 
 @APP.mongo_query
 def get_card_user(client: MongoClient, card_rfid: str) -> User:
     result = client.iot[USERS].find_one({"card": card_rfid})
-    return None if result is None else User.from_dict(convertObjectIdsToStr(result))
+    if result is None:
+        return None
+    if "current_visit" in result:
+        visit_type = client.iot[VISIT_TYPES].find_one({"_id": result["current_visit"]["visit_type"]})
+        result["current_visit"]["visit_type"] = visit_type
+    return User.from_dict(result)
 
 
 @APP.mongo_query
 def get_visit_type_by_name(client: MongoClient, visit_type_name: str) -> VisitType:
     result = client.iot[VISIT_TYPES].find_one({"visit_type": visit_type_name})
-    return None if result is None else VisitType.from_dict(convertObjectIdsToStr(result))
+    return None if result is None else VisitType.from_dict(result)
 
 
 @APP.mongo_query
-def get_visit_type_id_by_rfid_scanner(client: MongoClient, rfid_scanner: str) -> VisitType:
+def get_visit_type_by_rfid_scanner(client: MongoClient, rfid_scanner: str) -> VisitType:
     result = client.iot[VISIT_TYPES].find_one({"rfid_scanner": rfid_scanner})
-    return None if result is None else VisitType.from_dict(convertObjectIdsToStr(result))
-
+    return None if result is None else VisitType.from_dict(result)
 
 @APP.mongo_query
 def get_all_visit_types(client: MongoClient) -> List[VisitType]:
     results = client.iot[VISIT_TYPES].find()
-    return [VisitType.from_dict(convertObjectIdsToStr(result)) for result in results]
+    return [VisitType.from_dict(result) for result in results]
 
 @APP.mongo_query
 def get_ongoing_visits(client: MongoClient) -> List[User]:
     resultList = []
-    for user in client.iot[USERS].find({"current_visit": {"$exists": True}}): ## TODO: postprzatac ten syf
-        current_visit = user["current_visit"]
-        current_visit["user"] = user["_id"]
-        resultList.append(Visit.from_dict(current_visit))
+    visit_types = get_all_visit_types()
+    for user in client.iot[USERS].find({"current_visit": {"$exists": True}}):
+        # get visit type
+        visit_type = next(x for x in visit_types if ObjectId(x._id) == user["current_visit"]["visit_type"])
+        # add visit type to current visit
+        user["current_visit"]["visit_type"] = visit_type.__dict__
+        # append user to list
+        resultList.append(User.from_dict(user))
     return resultList
 
 @APP.mongo_query
@@ -82,4 +98,6 @@ TEST=False
 if TEST:
     client = MongoClient("mongodb://root:mongo@130.61.111.97:27017/?authSource=iot&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false")
     x = get_ongoing_visits(client)
+    print(x)
+    x = get_card_user(client, "f91a61e515d1fc6a7fa9986473b6d0ff")
     print(x)

@@ -7,6 +7,7 @@ import database.mongo.update as update
 import database.mongo.read as read
 from flask import request
 from main import APP
+
 USER_ROUTE = "/user"
 
 

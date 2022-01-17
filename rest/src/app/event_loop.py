@@ -49,7 +49,7 @@ class EventLoop:
         data = json.loads(message['data'].decode())
         
         user = read.get_card_user(data['client'])
-        visit_type = read.get_visit_type_id_by_rfid_scanner(channel)
+        visit_type = read.get_visit_type_by_rfid_scanner(channel)
         if not user:
             self.redis.publish(f"{channel}-server", 'false')
             return
