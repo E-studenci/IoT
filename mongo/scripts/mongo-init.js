@@ -51,10 +51,6 @@ db.createCollection(
                         bsonType:"string",
                         description:"must be a string and is required"
                     },
-                    balance:{
-                        bsonType:"int",
-                        description:"balance in groszy"
-                    },
                     email:{
                         bsonType:"string",
                         description:"must be a string and is required"
@@ -170,7 +166,6 @@ db.Users.insertMany([
     {
 		surname: "Snow",
 		name: "Zidan",
-		balance: 3000,
 		email: "example1@gmail.com",
 		status: "ACTIVE",
 		card: "f91a61e515d1fc6a7fa9986473b6d0ff"
@@ -178,7 +173,6 @@ db.Users.insertMany([
 	{
 		surname: "Sean",
 		name: "Buckley",
-		balance: 7000,
 		email: "example2@gmail.com",
 		status: "ACTIVE",
 		card: "9827bce49e2b5b9ea09f69db59c20e85"
@@ -186,7 +180,6 @@ db.Users.insertMany([
     {
 		surname: "Jolene",
 		name: "Alvarado",
-		balance: 1000,
 		email: "example3@gmail.com",
 		status: "ACTIVE",
 		card: "85bc3f25732df73426aa44f59c6ec78c"
@@ -194,7 +187,6 @@ db.Users.insertMany([
     {
 		surname: "Maxim",
 		name: "Witt",
-		balance: 2000,
 		email: "example4@gmail.com",
 		status: "ACTIVE",
 		card: "bdef2adeeede3e4502c6d891b0a0e3e4"
@@ -202,7 +194,6 @@ db.Users.insertMany([
     {
 		surname: "Tylor",
 		name: "Santiago",
-		balance: 5000,
 		email: "example5@gmail.com",
 		status: "DISABLED",
 		card: "44963461cf009e75c11447da27aec4ed"
