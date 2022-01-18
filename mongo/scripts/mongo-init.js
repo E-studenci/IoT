@@ -155,3 +155,79 @@ db.createCollection(
         }
     }
 );
+db.Admins.insertMany([
+    {
+		login: "admin1",
+		password: "password1"
+    },
+	{
+		login: "admin2",
+		password: "password2"
+    }
+])
+
+db.Users.insertMany([
+    {
+		surname: "Snow",
+		name: "Zidan",
+		balance: 3000,
+		email: "example1@gmail.com",
+		status: "ACTIVE",
+		card: "f91a61e515d1fc6a7fa9986473b6d0ff"
+    },
+	{
+		surname: "Sean",
+		name: "Buckley",
+		balance: 7000,
+		email: "example2@gmail.com",
+		status: "ACTIVE",
+		card: "9827bce49e2b5b9ea09f69db59c20e85"
+    },
+    {
+		surname: "Jolene",
+		name: "Alvarado",
+		balance: 1000,
+		email: "example3@gmail.com",
+		status: "ACTIVE",
+		card: "85bc3f25732df73426aa44f59c6ec78c"
+    },
+    {
+		surname: "Maxim",
+		name: "Witt",
+		balance: 2000,
+		email: "example4@gmail.com",
+		status: "ACTIVE",
+		card: "bdef2adeeede3e4502c6d891b0a0e3e4"
+    },
+    {
+		surname: "Tylor",
+		name: "Santiago",
+		balance: 5000,
+		email: "example5@gmail.com",
+		status: "DISABLED",
+		card: "44963461cf009e75c11447da27aec4ed"
+    }
+])
+
+db.VisitTypes.insertMany([
+    {
+        visit_type: "Gym",
+        cost_per_min: 60,
+        rfid_scanner: "f91a61e515d1fc6a7fa9986473b6d0ff"
+    },
+    {
+        visit_type: "Pool",
+        cost_per_min: 70,
+        rfid_scanner: "9827bce49e2b5b9ea09f69db59c20e85"
+    },
+    {
+        visit_type: "Spa",
+        cost_per_min: 50,
+        rfid_scanner: "85bc3f25732df73426aa44f59c6ec78c"
+    },
+    {
+        visit_type: "Sauna",
+        cost_per_min: 100,
+        rfid_scanner: "bdef2adeeede3e4502c6d891b0a0e3e4"
+    }
+])
