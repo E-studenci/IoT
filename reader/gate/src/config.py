@@ -5,7 +5,7 @@ dotenv.load_dotenv()
 
 class Environment:
     def __init__(self) -> None:
-        self.rfid       = getenv("RFID", "94fe310b4ec17fd218da48cc14ccbb5d")
+        self.rfid       = getenv("RFID", "9827bce49e2b5b9ea09f69db59c20e85")
         self.redis_host = getenv("REDIS_HOST", "127.0.0.1")
         self.redis_port = int(getenv("REDIS_PORT", "6379"))
         self.redis_db   = getenv("REDIS_DB", "0")
