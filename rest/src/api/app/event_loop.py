@@ -14,6 +14,8 @@ class EventLoop:
         pubsub = self.redis.pubsub(ignore_subscribe_messages=True)
         pubsub.subscribe(**rfids)
         
+        self.logger.info(self.redis.pubsub_channels())
+        
         self.thread = pubsub.run_in_thread(
             sleep_time=0.001, 
             exception_handler=self.exception_handler, 
@@ -45,7 +47,8 @@ class EventLoop:
         import api.database.mongo.read as read
         import api.database.mongo.create as create
         import api.database.mongo.update as update
-        channel: str = message['channel'].decode().removesuffix('-gate')
+        
+        channel: str = str(message['channel'].decode()).rstrip('-gate')
         data = json.loads(message['data'].decode())
         
         user = read.get_card_user(data['client'])
@@ -64,8 +67,9 @@ class EventLoop:
     
     @staticmethod
     def exception_handler(ex, pubsub, thread):
+        print(ex)
         try:
             thread.stop()
             thread.join(timeout=1.0)
-        except Exception:
-            pass
+        except Exception as exc:
+            print(exc)
