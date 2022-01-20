@@ -40,3 +40,9 @@ tbody
 {
     cursor: pointer;
 }
+
+.content
+{
+	text-align: center;
+	padding: 10px;
+}
