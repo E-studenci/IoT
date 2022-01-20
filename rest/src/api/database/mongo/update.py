@@ -22,14 +22,6 @@ def assign_card(client: MongoClient, user_id: str, card_rfid: str) -> bool:
 
 
 @APP.mongo_query
-def change_user_balance(client: MongoClient, user_id: str, amount: int) -> bool:
-    return client.iot[USERS].find_one_and_update(
-        {"_id": ObjectId(user_id)},
-        {"$inc": {"balance": amount}}
-    ) is not None
-
-
-@APP.mongo_query
 def end_visit(client: MongoClient, user_id: str, visit_end:datetime) -> int:
     user = client.iot[USERS].find_one_and_update(
         {"_id": ObjectId(user_id)},
