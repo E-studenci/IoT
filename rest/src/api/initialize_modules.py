@@ -2,6 +2,7 @@ import api.app.routes.common.list_databases
 import api.app.routes.authorization.logout
 import api.app.routes.authorization.login
 import api.app.routes.common.visit
+import api.app.routes.common.utils
 import api.app.routes.common.user
 import api.app.auth.login_manager
 import api.app.auth.basic_auth

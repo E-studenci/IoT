@@ -36,10 +36,12 @@ def get_user_by_email(client: MongoClient, email: str) -> User:
 @APP.mongo_query
 def get_user_by_id(client: MongoClient, id: str) -> User:
     result = client.iot[USERS].find_one({"_id": ObjectId(id)})
-    if "current_visit" in result:
-        visit_type = client.iot[VISIT_TYPES].find_one({"_id": result["current_visit"]["visit_type"]})
-        result["current_visit"]["visit_type"] = visit_type
-    return User.from_dict(result)
+    if result is not None:
+        if "current_visit" in result:
+            visit_type = client.iot[VISIT_TYPES].find_one({"_id": result["current_visit"]["visit_type"]})
+            result["current_visit"]["visit_type"] = visit_type
+        return User.from_dict(result)
+    return None
 
 @APP.mongo_query
 def get_card_user(client: MongoClient, card_rfid: str) -> User:

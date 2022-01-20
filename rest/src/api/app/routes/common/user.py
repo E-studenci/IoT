@@ -84,4 +84,3 @@ def delete_user(id: str):
     return ResponseData(
         code = 200
     )
-    

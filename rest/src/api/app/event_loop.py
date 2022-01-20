@@ -3,6 +3,7 @@ import datetime
 import json
 
 
+
 class EventLoop:
     def __init__(self, redis: Redis, logger) -> None:
         self.redis = redis
@@ -47,23 +48,28 @@ class EventLoop:
         import api.database.mongo.read as read
         import api.database.mongo.create as create
         import api.database.mongo.update as update
-        
+        from rest.src.api.utils.card import LAST_SCANNED_CARD
+
         channel: str = str(message['channel'].decode()).rstrip('-gate')
         data = json.loads(message['data'].decode())
         
-        user = read.get_card_user(data['client'])
         visit_type = read.get_visit_type_by_rfid_scanner(channel)
-        if not user:
-            self.redis.publish(f"{channel}-server", 'false')
-            return
         
-        if user.current_visit:
-            update.end_visit(user._id, datetime.datetime.now())
+        if visit_type.visit_type != "SCANNER":
+            user = read.get_card_user(data['client'])
+            if not user:
+                self.redis.publish(f"{channel}-server", 'false')
+                return
+            
+            if user.current_visit:
+                update.end_visit(user._id, datetime.datetime.now())
+            else:
+                create.start_visit(visit_type._id, user._id)
         else:
-            create.start_visit(visit_type._id, user._id)
-        
+            LAST_SCANNED_CARD.rfid = data['client']
+            LAST_SCANNED_CARD.scanned = datetime.datetime.now()
         self.redis.publish(f"{channel}-server", 'true')
-        
+    
     
     @staticmethod
     def exception_handler(ex, pubsub, thread):
