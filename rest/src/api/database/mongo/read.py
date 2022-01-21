@@ -122,6 +122,8 @@ def get_pending_visits(client: MongoClient) -> List[Visit]:
         visit_type = next(x for x in visit_types if ObjectId(x._id) == visit["visit_type"])
         visit["visit_type"] = visit_type
         visit["user"] = client.iot[USERS].find_one({"_id": visit["user"]})
+        if "current_visit" in visit["user"]:
+            visit["user"].pop("current_visit", None)
         result_list.append(Visit.from_dict(visit))
     return result_list
 
