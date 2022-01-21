@@ -8,6 +8,7 @@ from api import APP
 
 @APP.mongo_query
 def register_user(client: MongoClient, user:dict) -> str:
+    user["status"] = "ACTIVE"
     return convertObjectIdsToStr(client.iot[USERS].insert_one(user).inserted_id)
 
 
