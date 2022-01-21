@@ -1,9 +1,9 @@
-import datetime
 from api.app.response_parser import ResponseData, response_wrapper, ResponseError
 from rest.src.api.utils.card import LAST_SCANNED_CARD
 from flask_login import login_required
 from flask import request
 from api import APP
+import datetime
 
 UTILS_ROUTE = "/utils"
 

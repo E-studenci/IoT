@@ -2,18 +2,19 @@ from flask_login import login_required
 from flask import request
 
 from api.app.response_parser import ResponseData, response_wrapper, ResponseError
-from api import APP
+import api.utils.json_validation.json_schemas as json_schemas
 import api.database.mongo.create as create
 import api.database.mongo.delete as delete
 import api.database.mongo.update as update
 import api.database.mongo.read as read
+from api import APP
 
 USER_ROUTE = "/user"
 
 
 @APP.route(USER_ROUTE + "/add", methods=['PUT'])
 @login_required
-@response_wrapper()
+@response_wrapper(json_schemas.ADD_USER_SCHEMA)
 def add_user():
     json_data = request.json
     if read.get_user_by_email(json_data["email"]):
@@ -43,6 +44,7 @@ def get_user(id: str):
         data = user
     )
 
+
 @APP.route(USER_ROUTE + "/get", methods=['GET'])
 @login_required
 @response_wrapper()
@@ -53,14 +55,13 @@ def get_users():
         data = users
     )
 
-@APP.route(USER_ROUTE + "/edit", methods=['POST'])
+
+@APP.route(USER_ROUTE + "/edit/<id>", methods=['PATCH'])
 @login_required
-@response_wrapper()
-def update_user():
+@response_wrapper(json_schemas.EDIT_USER_SCHEMA)
+def update_user(id: str):
     json_data = request.json
-    changes = dict(json_data)
-    changes.pop("_id")
-    result = update.edit_user(json_data["_id"], changes)
+    result = update.edit_user(id, json_data)
     if not result:
         return ResponseData(
             code = 400,
@@ -70,6 +71,7 @@ def update_user():
         code = 200,
         data=result
     )
+
 
 @APP.route(USER_ROUTE + "/delete/<id>", methods=['DELETE'])
 @login_required
