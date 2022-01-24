@@ -48,7 +48,7 @@ EVENT_LOOP.start_event_loop()
 
 def create_main_window():
     window.geometry("220x100")
-    window.title("SENDER")
+    window.title("GATE")
 
     # intro_label = tkinter.Label(window, text="rfid:")
     # intro_label.grid(row=0)

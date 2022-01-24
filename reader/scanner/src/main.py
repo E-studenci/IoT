@@ -17,7 +17,7 @@ ENV = Environment()
 
 import os.path
 
-os.path.join('/reader/gate/tls', 'client_1.crt')
+os.path.join('/reader/scanner/tls', 'client_1.crt')
 
 REDIS = Redis(
     host         = ENV.redis_host, 
@@ -34,7 +34,7 @@ window = tkinter.Tk()
 
 def create_main_window():
     window.geometry("220x75")
-    window.title("SENDER")
+    window.title("SCAN")
 
     # intro_label = tkinter.Label(window, text="rfid:")
     # intro_label.grid(row=0)
