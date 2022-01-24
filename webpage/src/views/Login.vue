@@ -1,7 +1,7 @@
 <template>
     <div>
         <NavBar />
-        <h2>Siłownia fitness - klub z zasadami</h2>
+        <h2>Klub fitness - klub z zasadami</h2>
             <section class="photos">
                 <div class="container-fluid h-100 row">
                     <div class="col-sm-5 offset-md-1">
@@ -43,6 +43,7 @@
                     <div class="col-sm-6 d-flex justify-content-center">
                         <div class="row">
                             <b-form id="loginForm">
+                            <div v-if="loginError" class="error">{{ loginErrorMsg }}</div>
                             <div class="form-group row">
                                 <label for="login-input">Login</label>
                                 <b-form-input type="text" v-model="login" class="form-control" id="login-input" aria-describedby="emailHelp" placeholder="Wprowadź login"/>
@@ -53,7 +54,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-4 offset-md-7">
-                                <b-button @click="onSubmit" class="btn btn-primary">Zaloguj</b-button>
+                                <b-button @click="getLogIn" class="btn btn-primary">Zaloguj</b-button>
                                 </div>
                             </div>
                             </b-form>
@@ -66,7 +67,6 @@
 
 <script>
 import NavBar from '../components/NavBar.vue'
-import axios from 'axios'
 
 export default {
     components: { NavBar },
@@ -74,38 +74,34 @@ export default {
     data() {
         return {
             login: '',
-            password: ''
+            password: '',
+            loginError: false,
+            loginErrorMsg: 'Niepoprawny login lub hasło'
         }
     },
     methods: {
-        async onSubmit() {
+        getLogIn() {
             const token = `${this.login}:${this.password}`;
             const encodedToken = Buffer.from(token).toString('base64');
-            const session_url = 'http://130.61.111.97:20001/login';
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", "Basic " + encodedToken);
 
-            var config = {
-                method: 'get',
-                url: session_url,
-                headers: { 'Authorization': 'Basic '+ encodedToken }
+            var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow',
+            credentials: 'include',
             };
 
-            axios(config)
-            .then(response => {
-                console.log(response.data)
-                //localStorage.setItem('token', response.data.token)
-                this.$router.push('/currentClients')
+            fetch("http://127.0.0.1:5000/login", requestOptions)
+            .then(res => {
+                if(res.ok) {
+                    this.$router.push('/currentClients')
+                }
+                else {
+                    this.loginError = true
+                }
             })
-            .catch(function (error) {
-                console.log(error);
-            });
-            // let result = axios.get(
-            //     'http://130.61.111.97:20001/login?login=${this.login}&password=${this.password}'
-            // )
-            // console.warn(result)
-
-            // if(result.status == 201 && result.data.length > 0) {
-            //     //this.$router.push({name: "CurrentClients"})
-            // }
         }
     }
 }
@@ -127,4 +123,10 @@ export default {
 h2 {
     margin-top: 5px;
 }
+.error {
+    color: #ff0062;
+    margin-bottom: 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
 </style>

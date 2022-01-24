@@ -2,7 +2,7 @@
     <div>
 	    <b-nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <b-img :src="require('../../static/images/logo.jpg')" width="50" height="30"/>
-            <a class="navbar-brand" href="#"> Siłownia fitness</a>
+            <a class="navbar-brand" href="#"> Klub fitness</a>
             <b-nav-item class="nav-item active">
                 <router-link style="color: #efefef; text-decoration: none;" to="/currentClients">Obecni klienci</router-link>
             </b-nav-item>
@@ -21,7 +21,23 @@
 export default {
     methods: {
         logout() {
-            //console.log("laalal")
+            var myHeaders = new Headers();
+            myHeaders.append("Cookie", document.cookie);
+            var url = "http://127.0.0.1:5000/logout"
+
+            var requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                credentials: 'include',
+            };
+
+            fetch(url, requestOptions)
+            .then(res => {
+                if(res.ok) {
+                    document.cookie = 'session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                    this.$router.push('/login')
+                }
+            })
         }
     }
 }
