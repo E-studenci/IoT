@@ -46,6 +46,9 @@ def end_visit(client: MongoClient, user_id: str, visit_end:datetime) -> int:
 @APP.mongo_query
 def confirm_visit(client: MongoClient, visit_id:str) -> bool:
     visit = client.iot[VISIT_ARCHIVE].find_one({"_id": ObjectId(visit_id)})
+    if visit is None:
+        return False
+    
     if "status" in visit and visit["status"] == "PENDING":
         result = client.iot[VISIT_ARCHIVE].find_one_and_update(
             {"_id": ObjectId(visit_id)},
