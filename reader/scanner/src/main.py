@@ -34,7 +34,7 @@ window = tkinter.Tk()
 
 def create_main_window():
     window.geometry("220x75")
-    window.title("SENDER")
+    window.title("SCAN")
 
     # intro_label = tkinter.Label(window, text="rfid:")
     # intro_label.grid(row=0)
