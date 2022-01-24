@@ -3,10 +3,11 @@ from config import Environment
 import logging
 
 class EventLoop:
-    def __init__(self, redis: Redis, env: Environment) -> None:
+    def __init__(self, redis: Redis, env: Environment, window) -> None:
         self.redis = redis
         self.env = env
         self.thread = None
+        self.window = window
     
     def start_event_loop(self):  
         pubsub = self.redis.pubsub(ignore_subscribe_messages=True)
@@ -23,8 +24,10 @@ class EventLoop:
         
         if result == 'true':
             logging.info('Welcome to the desert of the real!')
+            self.window.nametowidget("indicator").config(background="green")
         else:
             logging.info('You shall not pass!')
+            self.window.nametowidget("indicator").config(background="red")
 
     def stop_event_loop(self):
         try:

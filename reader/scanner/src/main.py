@@ -1,5 +1,4 @@
 from config import Environment
-from event_loop import EventLoop
 from datetime import datetime
 from redis import Redis
 import logging
@@ -15,17 +14,6 @@ logging.basicConfig(level=logging.INFO, format=FORMAT)
 SLEEP_TIME = 10
 
 ENV = Environment()
-
-CLIENTS = [
-    "f91a61e515d1fc6a7fa9986473b6d0ff",
-    "4ab47e54c2f73ad4c0eb3974709721cd",
-    "9827bce49e2b5b9ea09f69db59c20e85",
-    "85bc3f25732df73426aa44f59c6ec78c",
-    "bdef2adeeede3e4502c6d891b0a0e3e4",
-    "44963461cf009e75c11447da27aec4ed",
-    "ad4338accfdbd2bf2d5d559a6ff31561",
-    "fbdab93478256eda11a7e173935e621c"
-]
 
 import os.path
 
@@ -44,9 +32,6 @@ REDIS = Redis(
 
 window = tkinter.Tk()
 
-EVENT_LOOP = EventLoop(REDIS, ENV, window)
-EVENT_LOOP.start_event_loop()
-
 def create_main_window():
     window.geometry("300x200")
     window.title("SENDER")
@@ -60,8 +45,6 @@ def create_main_window():
                               command=lambda: publish(rfid_input.get()))
     button_1.grid(row=1, column=0)
     
-    indicator = tkinter.Text(name="indicator",width=2, height=1, state="disabled")
-    indicator.grid(row=3,column=0)
     button_stop = tkinter.Button(window, text="Stop", command=window.quit)
     button_stop.grid(row=4)
     
@@ -73,7 +56,7 @@ def publish(client: str):
         "client": client
     }
     
-    logging.info(f"Client {client} wants to OPEN THE GATE!")
+    logging.info(f"Scanned card: {client}")
     REDIS.publish(f"{ENV.rfid}-gate", json.dumps(data))
 
 
