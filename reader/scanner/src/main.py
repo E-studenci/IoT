@@ -17,7 +17,7 @@ ENV = Environment()
 
 import os.path
 
-os.path.join('/reader/gate/tls', 'client_1.crt')
+os.path.join('/reader/scanner/tls', 'client_1.crt')
 
 REDIS = Redis(
     host         = ENV.redis_host, 
