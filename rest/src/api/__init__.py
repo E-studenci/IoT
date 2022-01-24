@@ -6,14 +6,12 @@ from api.utils.config import Environment
 from api.app.app import App
 
 ENV = Environment()
-
 APP = App(
     "Iot",
     ENV
 )
 APP.config["SECRET_KEY"] = ENV.flask_secret_key
-
-CORS(APP)
+CORS(APP, supports_credentials = True)
 
 LOGIN_MANAGER = LoginManager()
 LOGIN_MANAGER.init_app(APP)
