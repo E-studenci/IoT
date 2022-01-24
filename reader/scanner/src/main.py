@@ -33,20 +33,20 @@ REDIS = Redis(
 window = tkinter.Tk()
 
 def create_main_window():
-    window.geometry("300x200")
+    window.geometry("220x75")
     window.title("SENDER")
 
-    intro_label = tkinter.Label(window, text="Insert rfid:")
-    intro_label.grid(row=0)
-    rfid_input = tkinter.Entry(window, width=100)
+    # intro_label = tkinter.Label(window, text="rfid:")
+    # intro_label.grid(row=0)
+    rfid_input = tkinter.Entry(window, width=35)
     rfid_input.grid(row=0, column=1)
 
     button_1 = tkinter.Button(window, text="send",
-                              command=lambda: publish(rfid_input.get()))
-    button_1.grid(row=1, column=0)
+                              command=lambda: publish(rfid_input.get()), width= 30)
+    button_1.grid(row=2, column=1)
     
-    button_stop = tkinter.Button(window, text="Stop", command=window.quit)
-    button_stop.grid(row=4)
+    button_stop = tkinter.Button(window, text="Stop", command=window.quit, width=30)
+    button_stop.grid(row=5, column=1)
     
 
 
