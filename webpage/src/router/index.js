@@ -10,7 +10,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/login',
+    path: '/',
     name: 'Login',
     component: Login
   },
@@ -33,7 +33,11 @@ const routes = [
     path: '/editClient',
     name: 'EditClient',
     component: EditClient
-  }
+  },
+  {
+    path: '/login', 
+    redirect: '/'
+  },
 ]
 
 const router = new VueRouter({

@@ -44,7 +44,8 @@ export default {
                 credentials: 'include',
             };
 
-            fetch("http://127.0.0.1:5000/user/get", requestOptions)
+		fetch("http://130.61.111.97:20001/user/get/"+id, requestOptions)
+            fetch("/user/get", requestOptions)
             .then((res) => {
                 if(res.ok) {
                     return res.json()

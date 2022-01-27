@@ -92,7 +92,7 @@ export default {
 					body: JSON.stringify(doc)
 				};
 				var code = 0;
-				fetch("http://127.0.0.1:5000/user/edit/"+id, requestOptions)
+				fetch("http://130.61.111.97:20001/user/edit/"+id, requestOptions)
 				.then((res) => {
 					if(res.ok) {
 						this.$router.push('/allClients');
@@ -162,7 +162,7 @@ export default {
 			credentials: 'include',
 		};
 		var code = 0;
-		fetch("http://127.0.0.1:5000/user/get/"+id, requestOptions)
+		fetch("http://130.61.111.97:20001/user/get/"+id, requestOptions)
 			 .then((res) => {
 				code = res.status;
 				if(res.ok) {

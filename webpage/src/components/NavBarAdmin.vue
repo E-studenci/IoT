@@ -23,7 +23,8 @@ export default {
         logout() {
             var myHeaders = new Headers();
             myHeaders.append("Cookie", document.cookie);
-            var url = "http://127.0.0.1:5000/logout"
+		fetch("http://130.61.111.97:20001/user/get/"+id, requestOptions)
+            var url = "/logout"
 
             var requestOptions = {
                 method: 'GET',

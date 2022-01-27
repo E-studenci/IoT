@@ -73,7 +73,8 @@ export default {
 				credentials: 'include',
 				body: JSON.stringify(doc)
 			};
-			fetch("http://127.0.0.1:5000/user/add", requestOptions)
+		fetch("http://130.61.111.97:20001/user/get/"+id, requestOptions)
+			fetch("/user/add", requestOptions)
 			.then((res) => {
 				if(res.ok) {
 					console.log('Success:', res);

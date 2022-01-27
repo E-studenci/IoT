@@ -23,6 +23,7 @@ const router = new VueRouter({
   base: __dirname,
   routes: [
     { path: '/login', component: Login},
+    { path: '/', component: Login},
     { path: '/currentClients', component: CurrentClients},
     { path: '/allClients', component: AllClients},
     { path: '/addClient', component: AddClient},
