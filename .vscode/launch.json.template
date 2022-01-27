@@ -5,26 +5,33 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Flask",
+            "name": "Module",
             "type": "python",
             "request": "launch",
             "module": "flask",
             "env": { 
-                "FLASK_APP": "main.py", 
-                "FLASK_ENV": "development" , 
-                "PYTHONPATH": "${workspaceFolder}/rest/src${pathSeparator}${env:PYTHONPATH}"},
-            "args": ["run", "--no-debugger"],
-            "jinja": true
+                "FLASK_APP": "api",
+                "FLASK_ENV": "development" 
+            },
+            "envFile": "${workspaceFolder}/rest/.env",
+            "args": ["run", "--no-debugger", "--no-reload"],
+            "jinja": true,
+            "justMyCode": false
         },
         {
-            "name": "Python: Current File",
+            "name": "Code",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}/rest/src${pathSeparator}${env:PYTHONPATH}"
-            }
+            "module": "flask",
+            "env": { 
+                "FLASK_APP": "api",
+                "FLASK_ENV": "development",
+                "PYTHONPATH": "${workspaceFolder}/rest/src${pathSeparator}${env:PYTHONPATH}" 
+            },
+            "envFile": "${workspaceFolder}/rest/.env",
+            "args": ["run", "--no-debugger", "--no-reload"],
+            "jinja": true,
+            "justMyCode": false
         }
     ]
 }
