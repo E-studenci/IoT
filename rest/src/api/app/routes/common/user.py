@@ -61,6 +61,12 @@ def get_users():
 @response_wrapper(json_schemas.EDIT_USER_SCHEMA)
 def update_user(id: str):
     json_data = request.json
+    if "email" in json_data:
+        if read.get_user_by_email(json_data["email"]):
+            return ResponseData(
+                code = 400,
+                error = ResponseError(name="Invalid Data", description="email already used")
+            )
     result = update.edit_user(id, json_data)
     if not result:
         return ResponseData(
