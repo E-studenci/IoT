@@ -13,7 +13,7 @@
               </tr>
             </thead>
             <tbody v-for="client in allClients" :key="client._id">
-              <tr class="table-secondary" onclick="window.location='#';">
+              <tr class="table-secondary" @click="editClientData(client._id)">
                 <th scope="row">{{ client._id }}</th>
                 <td>{{ client.surname }}</td>
                 <td>{{ client.name }}</td>
@@ -56,7 +56,10 @@ export default {
             .then(data => {
                 this.allClients = data.data
             })
-        }
+        },
+	    editClientData(id) {
+			  this.$router.push('/editClient?id='+id);
+	    }
     },
     data() {
         return {
