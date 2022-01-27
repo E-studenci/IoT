@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/css/style.css">
+	<script src="../static/js/script.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <title>Dodanie klienta</title>
+  </head>
+  <body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#"><img src="../static/images/logo.jpg" width="50" height="30" alt="Siłownia" class="offset-md-2"></a>
+            <div class="collapse navbar-collapse" id="mainmenu">
+			
+				<ul class="navbar-nav mr-auto">
+				
+					<li class="nav-item">
+						<a class="nav-link" href="currentClients.html"> Obecni klienci </a>
+					</li>
+					
+					<li class="nav-item">
+						<a class="nav-link" href="allClients.html"> Wszyscy klienci </a>
+					</li>
+					
+					<li class="nav-item active">
+						<a class="nav-link" href="#"> Dodaj klienta </a>
+					</li>
+                    
+				</ul>
+                <button class="btn btn-light float-right" id="logoutBtn" type="button">Wyloguj</button> 
+			</div>
+        </nav>
+    </header>
+    <div class="content">
+		<h2>Dodaj Klienta</h2><br/><br/>
+		<form method="post" >
+			<p>
+				<label>Imie <label>
+			</p>
+			<p>
+				<input id="name" size="30" pattern="[A-Z][a-z]+" pattern="[A-Z][a-z]+" required="true"
+				title="Imie musi zaczynać się duża literą!" placeholder="Wprowadź imie"/>
+			</p>
+			<p>
+				<label>Nazwisko <label>
+			</p>
+			<p>
+				<input id="surname"  size="30" pattern="[A-Z][a-z]+" pattern="[A-Z][a-z]+" required="true"
+				title="Nazwisko musi zaczynać się duża literą!" placeholder="Wprowadź nazwisko"/>
+			</p>
+			<p>
+				<label>E-mail <label>
+			</p>
+			<p>
+				<input id="email" size="30"
+				pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required="true"
+				title="E-mail musi mieć odpowiedni format!" placeholder="Wprowadź e-mail"/>
+			</p>
+			<p>
+				<label>Karnet <label>
+			</p>
+			<p>
+				<input type="hidden" id="karnetId" value="karnetId"/>
+				<input type="button" id="karnet" value="Przypisz" onclick="assignCard()"/>
+			</p><br/>
+			<p>
+				<input type="button" onclick="history.back();" value="Powrót"/>
+				<input type="submit" onclick="addClient()" value="Dodaj"/>
+			</p>
+		</form>
+	</div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
