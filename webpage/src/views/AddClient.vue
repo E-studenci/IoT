@@ -8,7 +8,7 @@
 			</p>
 			<p>
 				<input id="name" size="30" pattern="[A-Z][a-z]+" required="true"
-				title="Imie musi zaczynać się duża literą placeholder="Wprowadź imie"/>
+				title="Imie musi zaczynać się duża literą" placeholder="Wprowadź imie"/>
 			</p>
 			<p>
 				<label>Nazwisko </label>
