@@ -10,7 +10,7 @@
                 <router-link style="color: #efefef; text-decoration: none;" to="/allClients">Wszyscy klienci</router-link>
             </b-nav-item>
             <b-nav-item class="nav-item active">
-                Dodaj klienta
+                <router-link style="color: #efefef; text-decoration: none;" to="/addClient">Dodaj klienta</router-link>
             </b-nav-item>
             <b-button class="btn text-right" @click="logout" id="logoutBtn">Wyloguj</b-button>
         </b-nav>	 
