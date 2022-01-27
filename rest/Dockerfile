@@ -11,12 +11,12 @@ ENV KEY_FOLDER /root/tls
 
 WORKDIR /root
 
-COPY /api-0.1-py3-none-any.whl /root/
-COPY /tls /root/tls
+COPY /api-0.1-py3-none-any.whl .
+COPY /tls tls
 
-RUN apt update
-RUN apt install -y python3-venv
-RUN python3 -m venv .venv
-RUN /root/.venv/bin/pip install /root/api-0.1-py3-none-any.whl
+RUN apt update &&\
+    apt install -y python3-venv &&\
+    python3 -m venv .venv &&\
+    .venv/bin/pip install /root/api-0.1-py3-none-any.whl
 
-CMD ["/root/.venv/bin/python3", "-m", "flask", "run", "-h", "0.0.0.0", "--no-debugger", "--no-reload"]
+CMD [".venv/bin/python3", "-m", "flask", "run", "-h", "0.0.0.0", "--no-debugger", "--no-reload"]

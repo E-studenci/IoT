@@ -12,6 +12,7 @@ setup(
         'colorama==0.4.4',
         'Deprecated==1.2.13',
         'Flask==2.0.2',
+        'Flask-Cors==3.0.10',
         'Flask-HTTPAuth==4.5.0',
         'Flask-Login==0.5.0',
         'itsdangerous==2.0.1',
