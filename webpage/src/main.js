@@ -15,6 +15,8 @@ Vue.use(VueRouter);
 import Login from './views/Login.vue';
 import CurrentClients from './views/CurrentClients.vue';
 import AllClients from './views/AllClients.vue';
+import AddClient from './views/AddClient.vue';
+import EditClient from './views/EditClient.vue';
 
 const router = new VueRouter({
   mode: 'history',
@@ -22,7 +24,9 @@ const router = new VueRouter({
   routes: [
     { path: '/login', component: Login},
     { path: '/currentClients', component: CurrentClients},
-    { path: '/allClients', component: AllClients}
+    { path: '/allClients', component: AllClients},
+    { path: '/addClient', component: AddClient},
+    { path: '/editClient', component: EditClient}
   ]
 });
 
