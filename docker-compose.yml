@@ -1,0 +1,26 @@
+version: "3.3"
+services:
+  webpage:
+    image: iot-webpage
+    container_name: webpage
+    ports:
+      - "20000:8080"
+  rest:
+    image: iot-rest
+    container_name: rest
+    ports:
+      - "20001:5000"
+  redis:
+    image: iot-redis
+    container_name: redis
+    ports:
+      - "20002:6379"
+  mongo:
+    image: iot-mongo
+    container_name: mongo
+    ports:
+      - "20003:27017"
+    volumes:
+      - mongodbdata:/data/db
+volumes:
+    mongodbdata:
