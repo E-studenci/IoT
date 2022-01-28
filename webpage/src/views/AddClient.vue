@@ -73,8 +73,8 @@ export default {
 				credentials: 'include',
 				body: JSON.stringify(doc)
 			};
-		fetch("http://130.61.111.97:20001/user/get/"+id, requestOptions)
-			fetch("/user/add", requestOptions)
+
+			fetch(this.$development + "user/add", requestOptions)
 			.then((res) => {
 				if(res.ok) {
 					console.log('Success:', res);
@@ -114,7 +114,7 @@ export default {
 				credentials: 'include',
 			};
 			var code = 0;
-			fetch("http://130.61.111.97:20001/utils/get_scanned_card", requestOptions)
+			fetch(this.$development + "utils/get_scanned_card", requestOptions)
 			.then((res) => {
 				code = res.status;
 				if(res.ok) {

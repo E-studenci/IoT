@@ -31,6 +31,8 @@ const router = new VueRouter({
   ]
 });
 
+Vue.prototype.$development = 'http://127.0.0.1:5000/'
+
 new Vue({
   router,
   render: h => h(App),

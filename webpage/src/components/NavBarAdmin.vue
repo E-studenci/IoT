@@ -23,8 +23,6 @@ export default {
         logout() {
             var myHeaders = new Headers();
             myHeaders.append("Cookie", document.cookie);
-		fetch("http://130.61.111.97:20001/user/get/"+id, requestOptions)
-            var url = "/logout"
 
             var requestOptions = {
                 method: 'GET',
@@ -32,7 +30,7 @@ export default {
                 credentials: 'include',
             };
 
-            fetch(url, requestOptions)
+            fetch(this.$development + "logout", requestOptions)
             .then(res => {
                 if(res.ok) {
                     document.cookie = 'session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';

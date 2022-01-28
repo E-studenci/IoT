@@ -44,8 +44,7 @@ export default {
                 credentials: 'include',
             };
 
-		fetch("http://130.61.111.97:20001/user/get/"+id, requestOptions)
-            fetch("/user/get", requestOptions)
+		    fetch(this.$development + "user/get", requestOptions)
             .then((res) => {
                 if(res.ok) {
                     return res.json()
@@ -55,6 +54,7 @@ export default {
                 }
             })
             .then(data => {
+                console.log(data)
                 this.allClients = data.data
             })
         },

@@ -92,7 +92,7 @@ export default {
 					body: JSON.stringify(doc)
 				};
 				var code = 0;
-				fetch("http://130.61.111.97:20001/user/edit/"+id, requestOptions)
+				fetch(this.$development + "user/edit/"+id, requestOptions)
 				.then((res) => {
 					if(res.ok) {
 						this.$router.push('/allClients');
@@ -123,7 +123,7 @@ export default {
 				credentials: 'include',
 			};
 			var code = 0;
-			fetch("http://130.61.111.97:20001/utils/get_scanned_card", requestOptions)
+			fetch(this.$development + "utils/get_scanned_card", requestOptions)
 			.then((res) => {
 				code = res.status;
 				if(res.ok) {
@@ -162,7 +162,7 @@ export default {
 			credentials: 'include',
 		};
 		var code = 0;
-		fetch("http://130.61.111.97:20001/user/get/"+id, requestOptions)
+		fetch(this.$development + "user/get/"+id, requestOptions)
 			 .then((res) => {
 				code = res.status;
 				if(res.ok) {
