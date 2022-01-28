@@ -3,7 +3,6 @@ import datetime
 import json
 
 
-
 class EventLoop:
     def __init__(self, redis: Redis, logger) -> None:
         self.redis = redis
@@ -72,8 +71,6 @@ class EventLoop:
         except Exception as e:
             self.logger.info(e)
             
-    
-    
     @staticmethod
     def exception_handler(ex, pubsub, thread):
         print(ex)

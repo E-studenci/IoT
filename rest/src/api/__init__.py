@@ -11,7 +11,17 @@ APP = App(
     ENV
 )
 APP.config["SECRET_KEY"] = ENV.flask_secret_key
-CORS(APP, supports_credentials = True)
+
+CORS(
+    APP,
+    origins=[
+        "http://127.0.0.1:5500",
+        "http://localhost:8080",
+        "http://127.0.0.1:8080",
+        ENV.host
+    ],
+    supports_credentials=True
+)
 
 LOGIN_MANAGER = LoginManager()
 LOGIN_MANAGER.init_app(APP)

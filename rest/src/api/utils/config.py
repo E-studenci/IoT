@@ -8,6 +8,7 @@ dotenv.load_dotenv()
 
 class Environment(metaclass=Singleton):
     def __init__(self) -> None:
+        self.host = getenv("HOST", "http://194.163.159.235:8080")
         self.mongo_host = getenv("MONGO_HOST", "127.0.0.1")
         self.mongo_port = int(getenv("MONGO_PORT", "27017"))
         self.mongo_user = getenv("MONGO_USER", "root")
