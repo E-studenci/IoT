@@ -49,7 +49,7 @@ export default {
                 credentials: 'include',
             };
 
-            fetch("http://130.61.111.97:20001/visit/get_pending", requestOptions)
+            fetch(this.$development + "visit/get_pending", requestOptions)
             .then((res) => {
                 if(res.ok) {
                     return res.json()
@@ -71,7 +71,7 @@ export default {
                 credentials: 'include',
             };
 
-            fetch("http://130.61.111.97:20001/visit/get_ongoing", requestOptions)
+            fetch(this.$development + "visit/get_ongoing", requestOptions)
             .then((res) => {
                 if(res.ok) {
                     return res.json()
@@ -87,7 +87,7 @@ export default {
         deletePendingClient(id) {
             var myHeaders = new Headers();
             myHeaders.append("Cookie", document.cookie);
-            var url = "http://130.61.111.97:20001/visit/confirm/" + id
+            var url = this.$development + "visit/confirm/" + id
 
             var requestOptions = {
                 method: 'POST',
