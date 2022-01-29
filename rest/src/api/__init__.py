@@ -14,12 +14,7 @@ APP.config["SECRET_KEY"] = ENV.flask_secret_key
 
 CORS(
     APP,
-    origins=[
-        "http://127.0.0.1:5500",
-        "http://localhost:8080",
-        "http://127.0.0.1:8080",
-        ENV.host
-    ],
+    origins=ENV.origins,
     supports_credentials=True
 )
 

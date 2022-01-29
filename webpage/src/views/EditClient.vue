@@ -92,7 +92,7 @@ export default {
 					body: JSON.stringify(doc)
 				};
 				var code = 0;
-				fetch(this.$development + "user/edit/"+id, requestOptions)
+				fetch(process.env.API_URL + "user/edit/"+id, requestOptions)
 				.then((res) => {
 					if(res.ok) {
 						this.$router.push('/allClients');
@@ -123,7 +123,7 @@ export default {
 				credentials: 'include',
 			};
 			var code = 0;
-			fetch(this.$development + "utils/get_scanned_card", requestOptions)
+			fetch(process.env.API_URL + "utils/get_scanned_card", requestOptions)
 			.then((res) => {
 				code = res.status;
 				if(res.ok) {
@@ -162,7 +162,7 @@ export default {
 			credentials: 'include',
 		};
 		var code = 0;
-		fetch(this.$development + "user/get/"+id, requestOptions)
+		fetch(process.env.API_URL + "user/get/"+id, requestOptions)
 			 .then((res) => {
 				code = res.status;
 				if(res.ok) {

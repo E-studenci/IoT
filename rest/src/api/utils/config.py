@@ -4,11 +4,14 @@ import dotenv
 from api.utils.singleton import Singleton
 
 dotenv.load_dotenv()
+SEPERATOR = ","
 
 
 class Environment(metaclass=Singleton):
     def __init__(self) -> None:
-        self.host = getenv("HOST", "http://194.163.159.235:8080")
+        self.origins = get_all_origins(
+            getenv("ORIGINS", "http://127.0.0.1:8080,http://localhost:8080,http://127.0.0.1:5500")
+        )
         self.mongo_host = getenv("MONGO_HOST", "127.0.0.1")
         self.mongo_port = int(getenv("MONGO_PORT", "27017"))
         self.mongo_user = getenv("MONGO_USER", "root")
@@ -23,3 +26,11 @@ class Environment(metaclass=Singleton):
         self.client_crt = getenv("CLIENT_CRT", "client.crt")
         self.key_folder = getenv("KEY_FOLDER", "tls")
         self.flask_secret_key = getenv("SECRET_KEY", "SECRET_KEY")
+
+
+def get_all_origins(hosts: str):
+    results = []
+    for host in hosts.split(SEPERATOR):
+        if host and host != "":
+            results.append(host)
+    return results

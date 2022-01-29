@@ -86,14 +86,16 @@ export default {
             var myHeaders = new Headers();
             myHeaders.append("Authorization", "Basic " + encodedToken);
 
+            console.log(process.env.API_URL)
+
             var requestOptions = {
-            method: 'GET',
-            headers: myHeaders,
-            redirect: 'follow',
-            credentials: 'include',
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow',
+                credentials: 'include',
             };
 
-            fetch(this.$development + "login", requestOptions)
+            fetch(process.env.API_URL + "login", requestOptions)
             .then(res => {
                 if(res.ok) {
                     this.$router.push('/currentClients')

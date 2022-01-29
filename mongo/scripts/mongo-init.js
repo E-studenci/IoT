@@ -114,3 +114,41 @@ db.createCollection(
         }
     }
 );
+
+
+db.createCollection( 
+    "VisitArchive",
+    {
+        validator:{
+            $jsonSchema:{
+                bsonType:"object",
+                properties:{
+                    visit_start:{
+                        bsonType:"string",
+                        description:"must be a date and is required"
+                    },
+                    visit_end:{
+                        bsonType:"string",
+                        description:"must be a date and is required"
+                    },
+                    cost_per_min:{
+                        bsonType:"int",
+                        description:"cost in groszy"
+                    },
+                    total_cost:{
+                        bsonType:"int",
+                        description:"cost in groszy"
+                    },
+                    visit_type:{
+                        bsonType:"objectId",
+                        description:"must be an int"
+                    },
+                    user:{
+                        bsonType:"objectId",
+                        description:"must be an int"
+                    }
+                }
+            }
+        }
+    }
+);

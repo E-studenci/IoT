@@ -74,7 +74,7 @@ export default {
 				body: JSON.stringify(doc)
 			};
 
-			fetch(this.$development + "user/add", requestOptions)
+			fetch(process.env.API_URL + "user/add", requestOptions)
 			.then((res) => {
 				if(res.ok) {
 					console.log('Success:', res);
@@ -114,7 +114,7 @@ export default {
 				credentials: 'include',
 			};
 			var code = 0;
-			fetch(this.$development + "utils/get_scanned_card", requestOptions)
+			fetch(process.env.API_URL + "utils/get_scanned_card", requestOptions)
 			.then((res) => {
 				code = res.status;
 				if(res.ok) {

@@ -1,25 +1,28 @@
 version: "3.3"
 services:
   webpage:
-    image: iot-webpage
+    build: ./webpage
     container_name: webpage
     ports:
       - "20000:8080"
+    env_file: ./webpage/.env
   rest:
-    image: iot-rest
+    build: ./rest
     container_name: rest
     ports:
       - "20001:5000"
+    env_file: ./rest/.env
   redis:
-    image: iot-redis
+    build: ./redis
     container_name: redis
     ports:
       - "20002:6379"
   mongo:
-    image: iot-mongo
+    build: ./mongo
     container_name: mongo
     ports:
       - "20003:27017"
+    env_file: ./mongo/.env
     volumes:
       - mongodbdata:/data/db
 volumes:
