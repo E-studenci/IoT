@@ -49,7 +49,7 @@ export default {
                 credentials: 'include',
             };
 
-            fetch(process.env.API_URL + "visit/get_pending", requestOptions)
+            fetch(this.$development + "visit/get_pending", requestOptions)
             .then((res) => {
                 if(res.ok) {
                     return res.json()
@@ -71,7 +71,7 @@ export default {
                 credentials: 'include',
             };
 
-            fetch(process.env.API_URL + "visit/get_ongoing", requestOptions)
+            fetch(this.$development + "visit/get_ongoing", requestOptions)
             .then((res) => {
                 if(res.ok) {
                     return res.json()
@@ -87,7 +87,7 @@ export default {
         deletePendingClient(id) {
             var myHeaders = new Headers();
             myHeaders.append("Cookie", document.cookie);
-            var url = process.env.API_URL + "visit/confirm/" + id
+            var url = this.$development + "visit/confirm/" + id
 
             var requestOptions = {
                 method: 'POST',

@@ -44,7 +44,7 @@ export default {
                 credentials: 'include',
             };
 
-		    fetch(process.env.API_URL + "user/get", requestOptions)
+		    fetch(this.$development + "user/get", requestOptions)
             .then((res) => {
                 if(res.ok) {
                     return res.json()

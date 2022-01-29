@@ -31,6 +31,8 @@ const router = new VueRouter({
   ]
 });
 
+Vue.prototype.$development = 'http://130.61.111.97:20001/'
+
 new Vue({
   router,
   render: h => h(App),
